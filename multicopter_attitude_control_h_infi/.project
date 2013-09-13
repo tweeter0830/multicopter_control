@@ -28,7 +28,12 @@
 		<link>
 			<name>vmmlib-1.0</name>
 			<type>2</type>
-			<location>/home/jacob/Packages/vmmlib-1.0</location>
+			<location>C:/home/jacob/Packages/vmmlib-1.0</location>
+		</link>
+		<link>
+			<name>vmmlib-master</name>
+			<type>2</type>
+			<location>C:/Libraries/vmmlib-master</location>
 		</link>
 	</linkedResources>
 </projectDescription>

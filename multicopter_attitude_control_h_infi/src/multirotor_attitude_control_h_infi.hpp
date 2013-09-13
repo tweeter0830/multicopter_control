@@ -48,8 +48,10 @@
 
 typedef vmml::matrix< 3, 3, float> Matrix;
 typedef vmml::vector<3,float> Vector;
-#define H_INFI_OPEN_LOOP = 0;
-#define H_INFI_TRACK = 1;
+
+#if !defined(CONFIG_ARCH_CORTEXM4) && !defined(CONFIG_ARCH_FPU)
+typedef long long uint64_t;
+#endif
 
 using namespace vmml;
 
@@ -67,11 +69,13 @@ public:
 		State():r(0.0f),p(0.0f),y(0.0f){};
        	};
 
-	float control();
+	void control(const State& meas_state, const State& meas_rate, State torque_out);
 
 	void reset_integrator();
 
-	void set_mode(bool ref_track, bool rate_track, bool accel_track);
+	void set_mode(bool state_track, bool rate_track, bool accel_track);
+
+	void set_setpoints(const State& state,const State& rate,const State& accel);
 
 	void set_time_constant(float time_constant) {
 		if (time_constant > 0.1f && time_constant < 3.0f) {
@@ -81,8 +85,8 @@ public:
 	void set_weight_error_deriv(float weight_in) {
 		_weight_error_deriv = weight_in;
 	}
-	void set_weight_error(float weight_in) {
-		_weight_error_deriv = weight_in;
+	void set_weight_error_state(float weight_in) {
+		_weight_error_state = weight_in;
 	}
 	void set_weight_integral(float weight_in) {
 		_weight_error_integral = weight_in;
@@ -106,17 +110,21 @@ private:
 	uint64_t _last_run;
 	float _tc;
 	float _weight_error_deriv;
-	float _weight_error;
+	float _weight_error_state;
 	float _weight_error_integral;
 	float _weight_torque;
 	float _Ixx;
 	float _Iyy;
 	float _Izz;
-	State _setpoint;
+	State _setpoint_state;
 	State _setpoint_rate;
 	State _setpoint_accel;
 	float _command_torque [3];
-	
+	bool _modes_set;
+	bool _state_track;
+	bool _rate_track;
+	bool _accel_track;
+
 	Vector _integral;
 	Matrix _M;
 	Matrix _M_inv;

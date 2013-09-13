@@ -45,18 +45,20 @@
 #include <vmmlib/matrix.hpp>
 #include <vmmlib/vector.hpp>
 
-using namespace vmml;
-
-Multirotor_Attitude_Control_H_Infi::Multirotor_Attitude_Control_H_Infi() :
-	_last_run(0),
-	_tc(0.1f),
-	_last_output(0.0f),
-	_integrator(0.0f),
-	_rate_error(0.0f),
-	_rate_setpoint(0.0f),
-	_max_deflection_rad(math::radians(45.0f))
-{
-
+Multirotor_Attitude_Control_H_Infi::Multirotor_Attitude_Control_H_Infi() {
+	_last_run = 0;
+	_tc = 0.1f;
+	_weight_error_deriv = 1;
+	_weight_error = 1;
+	_weight_error_integral = 1;
+	_weight_torque = 1;
+	_Ixx =1;
+	_Iyy =1;
+	_Izz =1;
+	_setpoint = State();
+	_setpoint_rate = State();
+	_setpoint_accel = State();
+	_command_torque [3];
 }
 
 float Multirotor_Attitude_Control_H_Infi::control()
@@ -65,20 +67,25 @@ float Multirotor_Attitude_Control_H_Infi::control()
 
 void Multirotor_Attitude_Control_H_Infi::reset_integrator()
 {
+	_integral(0)=0.0f;
+	_integral(1)=0.0f;
+	_integral(2)=0.0f;
 }
 
-void Multirotor_Attitude_Control_H_Infi::calc_gains(const vmml::matrix& M,const vmml::matrix& C, float* k_p, float* k_i, float* k_d) {
-	const static float I_vals[][] =  {{1,0,0},{0,1,0},{0,0,1}};
-	const static math::Matrix I(3,3,I_vals);
-	const math::Matrix Dynamics_weights = M.inverse();//*(C+f1.0/_weight_torque*I);
-	const float long_expr = sqrt(_weight_error*_weight_error + f2.0*_weight_error_deriv*_weight_error_integral)/weight_error;
+void Multirotor_Attitude_Control_H_Infi::calc_gains(const Matrix& M,const Matrix& C, float* k_p, float* k_i, float* k_d) {
+//	const static float I_vals[][] =  {{1,0,0},{0,1,0},{0,0,1}};
+	const static Matrix I( Matrix::IDENTITY );
+	Matrix M_inv;
+	M.inverse(M_inv);
+	const Matrix Dynamics_weights = M_inv(M)*(C+1.0f/_weight_torque*I);
+	const float long_expr = sqrt(_weight_error*_weight_error + 2.0f*_weight_error_deriv*_weight_error_integral)/_weight_error;
 
 	*k_d=long_expr*I+Dynamics_weights;
 	*k_p=_weight_error_integral/_weight_error_deriv*I+long_expr*Dynamics_weights;
 	*k_i=_weight_error_integral/_weight_error_deriv*Dynamics_weights;
 }
 
-void Multirotor_Attitude_Control_H_Infi::make_M(const State& St, vmml::matrix& M) {
+void Multirotor_Attitude_Control_H_Infi::make_M(const State& St, Matrix& M) {
 	float M_vals [3][3] = {0};
 	float sin_R=sin(St.r);
 	float cos_R=cos(St.r);
@@ -96,10 +103,10 @@ void Multirotor_Attitude_Control_H_Infi::make_M(const State& St, vmml::matrix& M
 	M_vals[2][2]=_Ixx*sin_P*sin_P + _Iyy*sin_R*sin_R*cos_P*cos_P +
 		     _Izz*cos_R*cos_R*cos_P*cos_P;
 
-	M = math::Matrix(3,3,M_vals);
+	M = Matrix(3,3,M_vals);
 }
 
-void Multirotor_Attitude_Control_H_Infi::make_C(const State& St, const State& Rate, vmml::matrix& C) {
+void Multirotor_Attitude_Control_H_Infi::make_C(const State& St, const State& Rate, Matrix& C) {
 	float C_vals [3][3] = {0};
 	float sin_R=sin(St.r);
 	float cos_R=cos(St.r);
@@ -132,5 +139,5 @@ void Multirotor_Attitude_Control_H_Infi::make_C(const State& St, const State& Ra
 		     _Iyy*Rate.p*sin_R*sin_R*cos_P*sin_P - 
 		     _Izz*Rate.p*cos_R*cos_R*cos_P*sin_P + 
 		     _Ixx*Rate.p*cos_P*sin_P;
-	C= math::Matrix(3,3,C_vals);
+	C.set( C_vals, C_vals + 9 );
 }
