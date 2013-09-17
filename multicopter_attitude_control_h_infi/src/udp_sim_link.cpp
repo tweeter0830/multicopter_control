@@ -8,6 +8,8 @@
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
+#include <chrono>
+#include <thread>
 #include <iostream>
 #include <string>
 #include <boost/array.hpp>
@@ -29,21 +31,29 @@ int main(int argc, char* argv[])
 		boost::asio::ip::address internal_ip = boost::asio::ip::address::from_string(str_internal_ip);
 		boost::asio::io_service io_service;
 		
-		udp::endpoint endpoint_recv_from(internal_ip,1230);
-		udp::endpoint endpoint_send_to(internal_ip,1230);
+		//udp::endpoint endpoint_recv_from(internal_ip,2040);
+		udp::endpoint endpoint_send_to(internal_ip,2500);
 
-		udp::socket socket(io_service);
-		socket.open(udp::v4());
-		socket.bind(endpoint_recv_from);
+		//udp::socket socket_recv(io_service);
+		udp::socket socket_send(io_service);
+		//socket_recv.open(udp::v4());
+		socket_send.open(udp::v4());
+		//socket_recv.bind(endpoint_recv_from);
+		//socket_send.bind(endpoint_send_to);
+		boost::array<int, 1> send_buf  = {{ 10 }};
+		while( true ) {
+			socket_send.send_to(boost::asio::buffer(send_buf), endpoint_send_to);
+			std::cout<< "Data '" << send_buf.data() << "' sent" << std::endl;
+			std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+		}
+		// while( true ) {
+		// 	boost::array<double, 1> recv_buf;
+		// 	size_t len =socket_recv.receive_from(
+		// 		boost::asio::buffer(recv_buf), endpoint_recv_from);
+		// 	printf( "Data '%2.3f' Received\n", recv_buf[0] );// recv_buf.data());
+		// }
 
-		boost::array<char, 4> send_buf  = {{ 'l','o','n','g' }};
-		socket.send_to(boost::asio::buffer(send_buf), endpoint_send_to);
-		std::cout<< "Data '" << send_buf.data() << "' sent" << std::endl;
-		boost::array<char, 4> recv_buf;
-		size_t len = socket.receive_from(
-			boost::asio::buffer(recv_buf), endpoint_send_to);
-
-		std::cout.write(recv_buf.data(), len);
+		
 	}
 	catch (std::exception& e)
 	{
