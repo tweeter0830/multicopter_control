@@ -34,11 +34,12 @@ int main(int argc, char* argv[])
 
 		udp::socket socket(io_service);
 		socket.open(udp::v4());
+		socket.bind(endpoint_recv_from);
 
-		boost::array<char, 1> send_buf  = {{ 0 }};
+		boost::array<char, 4> send_buf  = {{ 'l','o','n','g' }};
 		socket.send_to(boost::asio::buffer(send_buf), endpoint_send_to);
-		std::cout<< "Data '" << send_buf << "' sent" << std::endl;
-		boost::array<char, 128> recv_buf;
+		std::cout<< "Data '" << send_buf.data() << "' sent" << std::endl;
+		boost::array<char, 4> recv_buf;
 		size_t len = socket.receive_from(
 			boost::asio::buffer(recv_buf), endpoint_send_to);
 
