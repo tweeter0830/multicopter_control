@@ -37,7 +37,6 @@
  *
  */
 
-#include "multirotor_attitude_control_h_infi.hpp"
 #include <stdint.h>
 #include <math.h>
 #include <float.h>
@@ -45,6 +44,8 @@
 
 #include <vmmlib/matrix.hpp>
 #include <vmmlib/vector.hpp>
+
+#include "multirotor_attitude_control_h_infi.hpp"
 
 Multirotor_Attitude_Control_H_Infi::Multirotor_Attitude_Control_H_Infi() {
 	_last_run = 0;
