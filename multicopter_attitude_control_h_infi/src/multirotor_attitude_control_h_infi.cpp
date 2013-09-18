@@ -47,6 +47,9 @@
 
 #include "multirotor_attitude_control_h_infi.hpp"
 
+typedef vmml::matrix< 3, 3, float> Matrix;
+typedef vmml::vector<3,float> Vector;
+
 Multirotor_Attitude_Control_H_Infi::Multirotor_Attitude_Control_H_Infi() {
 	_last_run = 0;
 	_tc = 0.1f;
@@ -84,12 +87,12 @@ void Multirotor_Attitude_Control_H_Infi::control(const State& meas_state, const 
 		return;
 	}
 	// TODO: check inputs here
-	float k_p = 0;
-	float k_i = 0;
-	float k_d = 0;
+	Vector k_p;
+	Vector k_i;
+	Vector k_d;
 	make_M(meas_state,_M);
 	make_C(meas_state, meas_state, _C);
-	calc_gains(_M,_C, &k_p, &k_i, &k_d);
+	calc_gains(_M,_C, k_p, k_i, k_d);
 	Vector error_state;
 	if( _state_track ){
 		error_state(0) = meas_state.r-_setpoint_state.r;
@@ -135,70 +138,72 @@ void Multirotor_Attitude_Control_H_Infi::reset_integrator()
 	_integral(2)=0.0f;
 }
 
-void Multirotor_Attitude_Control_H_Infi::calc_gains(const Matrix& M,const Matrix& C, float* k_p, float* k_i, float* k_d) {
+void Multirotor_Attitude_Control_H_Infi::calc_gains(const Matrix& M,const Matrix& C, Vector& k_p, Vector& k_i, Vector& k_d) {
 //	const static float I_vals[][] =  {{1,0,0},{0,1,0},{0,0,1}};
-	const static Matrix I( Matrix::IDENTITY );
+	const Matrix I( Matrix::IDENTITY );
 	Matrix M_inv;
 	M.inverse(M_inv);
-	const Matrix Dynamics_weights = M_inv(M)*(C+1.0f/_weight_torque*I);
+	const Matrix Dynamics_weights = M_inv*(C+I*(1.0f/_weight_torque) );
 	const float long_expr = std::sqrt(_weight_error_state*_weight_error_state + 2.0f*_weight_error_deriv*_weight_error_integral)/_weight_error_state;
 
-	*k_d=long_expr*I+Dynamics_weights;
-	*k_p=_weight_error_integral/_weight_error_deriv*I+long_expr*Dynamics_weights;
-	*k_i=_weight_error_integral/_weight_error_deriv*Dynamics_weights;
+	k_d=(I*long_expr)+Dynamics_weights;
+	k_p=I*_weight_error_integral/_weight_error_deriv+Dynamics_weights*long_expr;
+	k_i=Dynamics_weights*(_weight_error_integral/_weight_error_deriv);
 }
 
 void Multirotor_Attitude_Control_H_Infi::make_M(const State& St, Matrix& M) {
-	float M_vals [3][3] = {0};
+	float M_vals [9] = {0};
 	float sin_R=std::sin(St.r);
 	float cos_R=std::cos(St.r);
 	float sin_P=std::sin(St.p);
 	float cos_P=std::cos(St.p);
 	//First Row
-	M_vals[0][0]=_Ixx;
-	M_vals[0][2]=-_Ixx*sin_P;
+	M_vals[0]=_Ixx;
+	M_vals[1]=0;
+	M_vals[2]=-_Ixx*sin_P;
 	// Second Row
-	M_vals[1][1]=_Iyy*cos_R*cos_R+_Izz*sin_R*sin_R;
-	M_vals[1][2]=(_Iyy-_Izz)*cos_R*sin_R*sin_P;
+	M_vals[3]=_Iyy*cos_R*cos_R+_Izz*sin_R*sin_R;
+	M_vals[4]=(_Iyy-_Izz)*cos_R*sin_R*sin_P;
+	M_vals[5]=0;
 	// Third row
-	M_vals[2][0]=-_Ixx*sin_P;
-	M_vals[2][1]=(_Iyy-_Izz)*cos_R*sin_R*cos_P;
-	M_vals[2][2]=_Ixx*sin_P*sin_P + _Iyy*sin_R*sin_R*cos_P*cos_P +
+	M_vals[6]=-_Ixx*sin_P;
+	M_vals[7]=(_Iyy-_Izz)*cos_R*sin_R*cos_P;
+	M_vals[8]=_Ixx*sin_P*sin_P + _Iyy*sin_R*sin_R*cos_P*cos_P +
 		     _Izz*cos_R*cos_R*cos_P*cos_P;
 
-	M = Matrix(3,3,M_vals);
+	M.set(M_vals,M_vals+9);
 }
 
 void Multirotor_Attitude_Control_H_Infi::make_C(const State& St, const State& Rate, Matrix& C) {
-	float C_vals [3][3] = {0};
+	float C_vals [9] = {0};
 	float sin_R=std::sin(St.r);
 	float cos_R=std::cos(St.r);
 	float sin_P=std::sin(St.p);
 	float cos_P=std::cos(St.p);
 	float long_factor = Rate.p*cos_R*sin_R + Rate.y*sin_R*sin_R*cos_P;
 	//First Row
-	C_vals[0][0]=0;
-	C_vals[0][1]=(_Iyy-_Izz)*(long_factor) + 
+	C_vals[0]=0;
+	C_vals[1]=(_Iyy-_Izz)*(long_factor) + 
 		     (_Izz-_Iyy)*Rate.y*cos_R*cos_R*cos_P -
 		     _Ixx*Rate.y*cos_P;
-	C_vals[0][2]=(_Izz-_Iyy)*Rate.p*cos_R*sin_R*cos_P*cos_P;
+	C_vals[2]=(_Izz-_Iyy)*Rate.p*cos_R*sin_R*cos_P*cos_P;
 	//Second Row
-	C_vals[1][0]=(_Izz-_Iyy)*(long_factor) + 
+	C_vals[3]=(_Izz-_Iyy)*(long_factor) + 
 	             (_Iyy-_Izz)*Rate.y*cos_R*cos_R*cos_P +
 		     _Ixx*Rate.y*cos_P;
-	C_vals[1][1]=(_Izz-_Iyy)*Rate.r*cos_R*cos_R;
-	C_vals[1][2]=-_Ixx*Rate.y*sin_P*cos_P +
+	C_vals[4]=(_Izz-_Iyy)*Rate.r*cos_R*cos_R;
+	C_vals[5]=-_Ixx*Rate.y*sin_P*cos_P +
 		      _Iyy*Rate.y*sin_R*sin_R*cos_P*sin_P +
 		      _Izz*Rate.y*cos_R*cos_R*sin_P*cos_P;
 	//Third Row
-	C_vals[2][0]=(_Iyy-_Izz)*Rate.y*cos_P*cos_P*sin_R*cos_R - 
+	C_vals[6]=(_Iyy-_Izz)*Rate.y*cos_P*cos_P*sin_R*cos_R - 
 		     _Ixx*Rate.p*cos_P;
-	C_vals[2][1]=(_Izz-_Iyy)*(Rate.p*cos_R*sin_R*sin_P+Rate.r*sin_R*sin_R*cos_P) +
+	C_vals[7]=(_Izz-_Iyy)*(Rate.p*cos_R*sin_R*sin_P+Rate.r*sin_R*sin_R*cos_P) +
 		     (_Iyy-_Izz)*Rate.r*cos_R*cos_R*cos_P + 
 		     _Ixx*Rate.y*sin_P*cos_P - 
 		     _Iyy*Rate.y*sin_R*sin_R*sin_P*cos_P - 
 		     _Izz*Rate.y*cos_R*cos_R*sin_P*cos_P;
-	C_vals[2][2]=(_Iyy-_Izz)*Rate.r*cos_R*sin_R*cos_P*cos_P - 
+	C_vals[8]=(_Iyy-_Izz)*Rate.r*cos_R*sin_R*cos_P*cos_P - 
 		     _Iyy*Rate.p*sin_R*sin_R*cos_P*sin_P - 
 		     _Izz*Rate.p*cos_R*cos_R*cos_P*sin_P + 
 		     _Ixx*Rate.p*cos_P*sin_P;
