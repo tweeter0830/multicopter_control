@@ -14,11 +14,13 @@
 #include <string>
 #include <boost/array.hpp>
 #include <boost/asio.hpp>
+#include <multirotor_attitude_control_h_infi.hpp>
 
 using boost::asio::ip::udp;
 
 int main(int argc, char* argv[])
 {
+	//TODO: Parse 
 	std::string str_internal_ip = "127.0.0.1";
 	try
 	{
@@ -31,15 +33,18 @@ int main(int argc, char* argv[])
 		boost::asio::ip::address internal_ip = boost::asio::ip::address::from_string(str_internal_ip);
 		boost::asio::io_service io_service;
 		
-		//udp::endpoint endpoint_recv_from(internal_ip,2040);
+		udp::endpoint endpoint_recv_from(internal_ip,2040);
 		udp::endpoint endpoint_send_to(internal_ip,2500);
 
-		//udp::socket socket_recv(io_service);
+		udp::socket socket_recv(io_service);
 		udp::socket socket_send(io_service);
-		//socket_recv.open(udp::v4());
+		socket_recv.open(udp::v4());
 		socket_send.open(udp::v4());
-		//socket_recv.bind(endpoint_recv_from);
-		//socket_send.bind(endpoint_send_to);
+		socket_recv.bind(endpoint_recv_from);
+		socket_send.bind(endpoint_send_to);
+	}
+	Multirotor_Attitude_Control_H_Infi quad_control();
+	
 		boost::array<int, 1> send_buf  = {{ 10 }};
 		while( true ) {
 			socket_send.send_to(boost::asio::buffer(send_buf), endpoint_send_to);

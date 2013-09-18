@@ -49,9 +49,9 @@
 typedef vmml::matrix< 3, 3, float> Matrix;
 typedef vmml::vector<3,float> Vector;
 
-#if !defined(CONFIG_ARCH_CORTEXM4) && !defined(CONFIG_ARCH_FPU)
-typedef long long uint64_t;
-#endif
+// #if !defined(CONFIG_ARCH_CORTEXM4) && !defined(CONFIG_ARCH_FPU)
+// typedef long long uint64_t;
+// #endif
 
 using namespace vmml;
 
@@ -68,7 +68,11 @@ public:
 
 		State():r(0.0f),p(0.0f),y(0.0f){};
        	};
-
+	void set_phys_params(float Ixx, float Iyy, float Izz){
+		_Ixx = Ixx;
+		_Iyy = Iyy;
+		_Izz = Izz;
+	};
 	void control(const State& meas_state, const State& meas_rate, State torque_out);
 
 	void reset_integrator();
@@ -81,6 +85,11 @@ public:
 		if (time_constant > 0.1f && time_constant < 3.0f) {
 			_tc = time_constant;
 		}
+	}
+	void set_weights(float w_error, float w_int, float w_deriv){
+		_weight_error_state = w_error;
+		_weight_error_integral = w_int;
+		_weight_error_deriv = w_deriv;
 	}
 	void set_weight_error_deriv(float weight_in) {
 		_weight_error_deriv = weight_in;
@@ -107,7 +116,7 @@ public:
 	}
 
 private:
-	uint64_t _last_run;
+	int _last_run;
 	float _tc;
 	float _weight_error_deriv;
 	float _weight_error_state;
