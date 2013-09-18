@@ -14,7 +14,7 @@
 #include <string>
 #include <boost/array.hpp>
 #include <boost/asio.hpp>
-#include <multirotor_attitude_control_h_infi.hpp>
+#include "multirotor_attitude_control_h_infi.hpp"
 
 using boost::asio::ip::udp;
 

@@ -46,7 +46,6 @@
 #include <vmmlib/matrix.hpp>
 #include <vmmlib/vector.hpp>
 
-vmml::matrix< 3, 3, float> debugggds;
 typedef vmml::matrix< 3, 3, float> Matrix;
 typedef vmml::vector<3,float> Vector;
 
@@ -138,7 +137,7 @@ private:
 	Vector _integral;
 	Matrix _M;
 	Matrix _M_inv;
-	Matrix _C;
+	Matrix _Cor;
 	
 	void calc_gains(const Matrix& M,const Matrix& C, Vector& k_p, Vector& k_i, Vector& k_d);
 	void make_M(const State& St, Matrix& M);

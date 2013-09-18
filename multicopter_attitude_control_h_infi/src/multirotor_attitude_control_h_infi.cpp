@@ -1,6 +1,6 @@
  /****************************************************************************
  *
- *   Copyright (c) 2013 Estimation and Control Library (ECL). All rights reserved.
+ *_C   Copyright (c) 2013 Estimation and Control Library (ECL). All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -91,8 +91,8 @@ void Multirotor_Attitude_Control_H_Infi::control(const State& meas_state, const 
 	Vector k_i;
 	Vector k_d;
 	make_M(meas_state,_M);
-	make_C(meas_state, meas_state, _C);
-	calc_gains(_M,_C, k_p, k_i, k_d);
+	make_C(meas_state, meas_state, _Cor);
+	calc_gains(_M,_Cor, k_p, k_i, k_d);
 	Vector error_state;
 	if( _state_track ){
 		error_state(0) = meas_state.r-_setpoint_state.r;
@@ -125,7 +125,7 @@ void Multirotor_Attitude_Control_H_Infi::control(const State& meas_state, const 
 	_integral = _integral + error_state;
 	// TODO: check integral limits and saturation
 	Vector control_accel = k_d*error_rate + k_p*error_state + k_i*_integral;
-	Vector control_torque = _M*setpoint_accel + _C*meas_rate_vect - _M*control_accel;
+	Vector control_torque = _M*setpoint_accel + _Cor*meas_rate_vect - _M*control_accel;
 	torque_out.r = control_torque(0);
 	torque_out.p = control_torque(1);
 	torque_out.y = control_torque(2);
@@ -139,15 +139,15 @@ void Multirotor_Attitude_Control_H_Infi::reset_integrator()
 }
 
 void Multirotor_Attitude_Control_H_Infi::calc_gains(const Matrix& M,const Matrix& C, Vector& k_p, Vector& k_i, Vector& k_d) {
-//	const static float I_vals[][] =  {{1,0,0},{0,1,0},{0,0,1}};
-	const Matrix I( Matrix::IDENTITY );
+	Matrix I;
+	I(0,0)=1.0f;I(1,1)=1.0f;I(2,2)=1.0f;
 	Matrix M_inv;
 	M.inverse(M_inv);
-	const Matrix Dynamics_weights = M_inv*(C+I*(1.0f/_weight_torque) );
-	const float long_expr = std::sqrt(_weight_error_state*_weight_error_state + 2.0f*_weight_error_deriv*_weight_error_integral)/_weight_error_state;
+	Matrix Dynamics_weights = M_inv*(C+I*(1.0f/_weight_torque) );
+	float long_expr = std::sqrt(_weight_error_state*_weight_error_state + 2.0f*_weight_error_deriv*_weight_error_integral)/_weight_error_state;
 
 	k_d=(I*long_expr)+Dynamics_weights;
-	k_p=I*_weight_error_integral/_weight_error_deriv+Dynamics_weights*long_expr;
+	k_p=I*(_weight_error_integral/_weight_error_deriv)+Dynamics_weights*long_expr;
 	k_i=Dynamics_weights*(_weight_error_integral/_weight_error_deriv);
 }
 
