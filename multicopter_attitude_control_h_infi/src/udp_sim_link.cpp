@@ -42,24 +42,22 @@ int main(int argc, char* argv[])
 		socket_send.open(udp::v4());
 		socket_recv.bind(endpoint_recv_from);
 		socket_send.bind(endpoint_send_to);
-	}
-	Multirotor_Attitude_Control_H_Infi quad_control();
-	
 		boost::array<int, 1> send_buf  = {{ 10 }};
 		while( true ) {
 			socket_send.send_to(boost::asio::buffer(send_buf), endpoint_send_to);
 			std::cout<< "Data '" << send_buf.data() << "' sent" << std::endl;
 			std::this_thread::sleep_for(std::chrono::milliseconds(1500));
 		}
-		// while( true ) {
-		// 	boost::array<double, 1> recv_buf;
-		// 	size_t len =socket_recv.receive_from(
-		// 		boost::asio::buffer(recv_buf), endpoint_recv_from);
-		// 	printf( "Data '%2.3f' Received\n", recv_buf[0] );// recv_buf.data());
-		// }
+		Multirotor_Attitude_Control_H_Infi quad_control();
 
-		
 	}
+		
+	// while( true ) {
+	// 	boost::array<double, 1> recv_buf;
+	// 	size_t len =socket_recv.receive_from(
+	// 		boost::asio::buffer(recv_buf), endpoint_recv_from);
+	// 	printf( "Data '%2.3f' Received\n", recv_buf[0] );// recv_buf.data());
+	// }		
 	catch (std::exception& e)
 	{
 		std::cerr << e.what() << std::endl;
