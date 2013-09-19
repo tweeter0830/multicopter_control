@@ -1,12 +1,12 @@
 Model {
   Name			  "systema"
-  Version		  6.3
+  Version		  7.0
   MdlSubVersion		  0
   GraphicalInterface {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.1194"
+    ComputedModelVersion    "1.1197"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -25,17 +25,6 @@ Model {
   SortedOrder		  off
   ExecutionContextIcon	  off
   ShowLinearizationAnnotations on
-  RecordCoverage	  off
-  CovPath		  "/"
-  CovSaveName		  "covdata"
-  CovMetricSettings	  "dw"
-  CovNameIncrementing	  off
-  CovHtmlReporting	  on
-  covSaveCumulativeToWorkspaceVar on
-  CovSaveSingleToWorkspaceVar on
-  CovCumulativeVarName	  "covCumulativeData"
-  CovCumulativeReport	  off
-  CovReportOnPause	  on
   ScopeRefreshTime	  0.035000
   OverrideScopeRefreshTime on
   DisableAllScopes	  off
@@ -51,13 +40,16 @@ Model {
   BrowserLookUnderMasks	  off
   CloseFcn		  "rtwprivate ssgencode ModelCloseRequest systema"
   Created		  "Wed Oct 08 11:05:00 2003"
+  Creator		  "L503823"
   UpdateHistory		  "UpdateHistoryNever"
   ModifiedByFormat	  "%<Auto>"
-  LastModifiedBy	  "B.Samir"
+  LastModifiedBy	  "L503823"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Tue Dec 06 17:06:11 2005"
-  ModelVersionFormat	  "1.%<AutoIncrement:1194>"
+  LastModifiedDate	  "Thu Sep 19 13:22:18 2013"
+  RTWModifiedTimeStamp	  0
+  ModelVersionFormat	  "1.%<AutoIncrement:1197>"
   ConfigurationManager	  "None"
+  SimulationMode	  "normal"
   LinearizationMsg	  "none"
   Profile		  off
   ParamWorkspaceSource	  "MATLABWorkspace"
@@ -65,6 +57,17 @@ Model {
   AccelTemplateMakefile	  "accel_default_tmf"
   AccelMakeCommand	  "make_rtw"
   TryForcingSFcnDF	  off
+  RecordCoverage	  off
+  CovPath		  "/"
+  CovSaveName		  "covdata"
+  CovMetricSettings	  "dw"
+  CovNameIncrementing	  off
+  CovHtmlReporting	  on
+  covSaveCumulativeToWorkspaceVar on
+  CovSaveSingleToWorkspaceVar on
+  CovCumulativeVarName	  "covCumulativeData"
+  CovCumulativeReport	  off
+  CovReportOnPause	  on
   ExtModeBatchMode	  off
   ExtModeEnableFloating	  on
   ExtModeTrigType	  "manual"
@@ -87,8 +90,6 @@ Model {
   ExtModeLogAll		  on
   ExtModeAutoUpdateStatusClock on
   BufferReuse		  off
-  StrictBusMsg		  "ErrorLevel1"
-  ProdHWDeviceType	  "32-bit Generic"
   ShowModelReferenceBlockVersion off
   ShowModelReferenceBlockIO off
   Array {
@@ -96,13 +97,13 @@ Model {
     Dimension		    1
     Simulink.ConfigSet {
       $ObjectID		      1
-      Version		      "1.1.0"
+      Version		      "1.3.0"
       Array {
 	Type			"Handle"
 	Dimension		7
 	Simulink.SolverCC {
 	  $ObjectID		  2
-	  Version		  "1.1.0"
+	  Version		  "1.3.0"
 	  StartTime		  "0.0"
 	  StopTime		  "20"
 	  AbsTol		  "auto"
@@ -110,10 +111,13 @@ Model {
 	  InitialStep		  "auto"
 	  MaxNumMinSteps	  "-1"
 	  MaxOrder		  5
+	  ConsecutiveZCsStepRelTol "10*128*eps"
+	  MaxConsecutiveZCs	  "1000"
 	  ExtrapolationOrder	  4
 	  NumberNewtonIterations  1
 	  MaxStep		  "auto"
 	  MinStep		  "auto"
+	  MaxConsecutiveMinStep	  "1"
 	  RelTol		  "1e-3"
 	  SolverMode		  "Auto"
 	  Solver		  "ode4"
@@ -128,7 +132,7 @@ Model {
 	}
 	Simulink.DataIOCC {
 	  $ObjectID		  3
-	  Version		  "1.1.0"
+	  Version		  "1.3.0"
 	  Decimation		  "1"
 	  ExternalInput		  "[t, u]"
 	  FinalStateName	  "xFinal"
@@ -154,7 +158,7 @@ Model {
 	}
 	Simulink.OptimizationCC {
 	  $ObjectID		  4
-	  Version		  "1.1.0"
+	  Version		  "1.3.0"
 	  BlockReduction	  on
 	  BooleanDataType	  on
 	  ConditionallyExecuteInputs on
@@ -164,9 +168,9 @@ Model {
 	  BufferReuse		  off
 	  EnforceIntegerDowncast  off
 	  ExpressionFolding	  off
+	  ExpressionDepthLimit	  2147483647
 	  FoldNonRolledExpr	  off
 	  LocalBlockOutputs	  off
-	  ParameterPooling	  on
 	  RollThreshold		  5
 	  SystemCodeInlineAuto	  off
 	  StateBitsets		  off
@@ -180,29 +184,37 @@ Model {
 	  OptimizeModelRefInitCode off
 	  LifeSpan		  "inf"
 	  BufferReusableBoundary  on
+	  SimCompilerOptimization "Off"
+	  AccelVerboseBuild	  off
 	}
 	Simulink.DebuggingCC {
 	  $ObjectID		  5
-	  Version		  "1.1.0"
+	  Version		  "1.3.0"
 	  RTPrefix		  "error"
 	  ConsistencyChecking	  "none"
 	  ArrayBoundsChecking	  "none"
 	  SignalInfNanChecking	  "none"
+	  SignalRangeChecking	  "none"
 	  ReadBeforeWriteMsg	  "UseLocalSettings"
 	  WriteAfterWriteMsg	  "UseLocalSettings"
 	  WriteAfterReadMsg	  "UseLocalSettings"
 	  AlgebraicLoopMsg	  "warning"
 	  ArtificialAlgebraicLoopMsg "warning"
+	  SaveWithDisabledLinksMsg "warning"
+	  SaveWithParameterizedLinksMsg	"none"
 	  CheckSSInitialOutputMsg on
 	  CheckExecutionContextPreStartOutputMsg off
 	  CheckExecutionContextRuntimeOutputMsg	off
 	  SignalResolutionControl "TryResolveAllWithWarning"
 	  BlockPriorityViolationMsg "warning"
 	  MinStepSizeMsg	  "warning"
+	  TimeAdjustmentMsg	  "none"
+	  MaxConsecutiveZCsMsg	  "error"
 	  SolverPrmCheckMsg	  "none"
 	  InheritedTsInSrcMsg	  "warning"
 	  DiscreteInheritContinuousMsg "warning"
 	  MultiTaskDSMMsg	  "warning"
+	  MultiTaskCondExecSysMsg "none"
 	  MultiTaskRateTransMsg	  "error"
 	  SingleTaskRateTransMsg  "none"
 	  TasksWithSamePriorityMsg "warning"
@@ -214,6 +226,7 @@ Model {
 	  ParameterOverflowMsg	  "error"
 	  ParameterUnderflowMsg	  "none"
 	  ParameterPrecisionLossMsg "warning"
+	  ParameterTunabilityLossMsg "warning"
 	  UnderSpecifiedDataTypeMsg "none"
 	  UnnecessaryDatatypeConvMsg "none"
 	  VectorMatrixConversionMsg "none"
@@ -238,10 +251,13 @@ Model {
 	  ModelReferenceDataLoggingMessage "warning"
 	  ModelReferenceSymbolNameMessage "warning"
 	  ModelReferenceExtraNoncontSigs "error"
+	  StateNameClashWarn	  "warning"
+	  StrictBusMsg		  "ErrorLevel1"
+	  LoggingUnavailableSignals "error"
 	}
 	Simulink.HardwareCC {
 	  $ObjectID		  6
-	  Version		  "1.1.0"
+	  Version		  "1.3.0"
 	  ProdBitPerChar	  8
 	  ProdBitPerShort	  16
 	  ProdBitPerInt		  32
@@ -268,7 +284,7 @@ Model {
 	}
 	Simulink.ModelReferenceCC {
 	  $ObjectID		  7
-	  Version		  "1.1.0"
+	  Version		  "1.3.0"
 	  UpdateModelReferenceTargets "IfOutOfDateOrStructuralChange"
 	  CheckModelReferenceTargetMessage "error"
 	  ModelReferenceNumInstancesAllowed "Multi"
@@ -278,10 +294,11 @@ Model {
 	Simulink.RTWCC {
 	  $BackupClass		  "Simulink.RTWCC"
 	  $ObjectID		  8
-	  Version		  "1.1.0"
+	  Version		  "1.3.0"
 	  SystemTargetFile	  "grt.tlc"
 	  GenCodeOnly		  off
 	  MakeCommand		  "make_rtw"
+	  GenerateMakefile	  on
 	  TemplateMakefile	  "grt_default_tmf"
 	  GenerateReport	  off
 	  SaveLog		  off
@@ -297,12 +314,16 @@ Model {
 	  IncludeHyperlinkInReport off
 	  LaunchReport		  off
 	  TargetLang		  "C"
+	  IncludeBusHierarchyInRTWFileBlockHierarchyMap	off
+	  IncludeERTFirstTime	  on
+	  GenerateTraceInfo	  off
+	  RTWCompilerOptimization "Off"
 	  Array {
 	    Type		    "Handle"
 	    Dimension		    2
 	    Simulink.CodeAppCC {
 	      $ObjectID		      9
-	      Version		      "1.1.0"
+	      Version		      "1.3.0"
 	      ForceParamTrailComments off
 	      GenerateComments	      on
 	      IgnoreCustomStorageClasses off
@@ -315,9 +336,14 @@ Model {
 	      SimulinkDataObjDesc     off
 	      SFDataObjDesc	      off
 	      IncDataTypeInIds	      off
-	      PrefixModelToSubsysFcnNames on
-	      CustomSymbolStr	      "$R$N$M"
 	      MangleLength	      1
+	      CustomSymbolStrGlobalVar "$R$N$M"
+	      CustomSymbolStrType     "$N$R$M"
+	      CustomSymbolStrField    "$N$M"
+	      CustomSymbolStrFcn      "$R$N$M$F"
+	      CustomSymbolStrBlkIO    "rtb_$N$M"
+	      CustomSymbolStrTmpVar   "$N$M"
+	      CustomSymbolStrMacro    "$R$N$M"
 	      DefineNamingRule	      "None"
 	      ParamNamingRule	      "None"
 	      SignalNamingRule	      "None"
@@ -330,7 +356,7 @@ Model {
 	    Simulink.GRTTargetCC {
 	      $BackupClass	      "Simulink.TargetCC"
 	      $ObjectID		      10
-	      Version		      "1.1.0"
+	      Version		      "1.3.0"
 	      TargetFcnLib	      "ansi_tfl_tmw.mat"
 	      TargetLibSuffix	      ""
 	      TargetPreCompLibLocation ""
@@ -338,8 +364,10 @@ Model {
 	      UtilityFuncGeneration   "Auto"
 	      GenerateFullHeader      on
 	      GenerateSampleERTMain   off
+	      GenerateTestInterfaces  off
 	      IsPILTarget	      off
 	      ModelReferenceCompliant off
+	      CompOptLevelCompliant   on
 	      IncludeMdlTerminateFcn  on
 	      CombineOutputUpdateFcns off
 	      SuppressErrorStatus     off
@@ -354,12 +382,17 @@ Model {
 	      PurelyIntegerCode	      off
 	      SupportContinuousTime   on
 	      SupportNonInlinedSFcns  on
+	      EnableShiftOperators    on
+	      ParenthesesLevel	      "Nominal"
+	      PortableWordSizes	      off
+	      ModelStepFunctionPrototypeControlCompliant off
 	      ExtMode		      off
 	      ExtModeStaticAlloc      off
 	      ExtModeTesting	      off
 	      ExtModeStaticAllocSize  1000000
 	      ExtModeTransport	      0
 	      ExtModeMexFile	      "ext_comm"
+	      ExtModeIntrfLevel	      "Level1"
 	      RTWCAPISignals	      off
 	      RTWCAPIParams	      off
 	      RTWCAPIStates	      off
@@ -371,7 +404,6 @@ Model {
 	PropName		"Components"
       }
       Name		      "Configuration"
-      SimulationMode	      "normal"
       ExtraOptions	      "-aExtMode=0 -aExtModeTesting=0 "
       CurrentDlgPage	      "Solver"
     }
@@ -399,36 +431,10 @@ Model {
       DisplayTime	      off
     }
     Block {
-      BlockType		      Constant
-      Value		      "1"
-      VectorParams1D	      on
-      OutDataTypeMode	      "Inherit from 'Constant value'"
-      OutDataType	      "sfix(16)"
-      ConRadixGroup	      "Use specified scaling"
-      OutScaling	      "2^0"
-      SampleTime	      "inf"
-    }
-    Block {
       BlockType		      Demux
       Outputs		      "4"
       DisplayOption	      "none"
       BusSelectionMode	      off
-    }
-    Block {
-      BlockType		      Gain
-      Gain		      "1"
-      Multiplication	      "Element-wise(K.*u)"
-      ParameterDataTypeMode   "Same as input"
-      ParameterDataType	      "sfix(16)"
-      ParameterScalingMode    "Best Precision: Matrix-wise"
-      ParameterScaling	      "2^0"
-      OutDataTypeMode	      "Same as input"
-      OutDataType	      "sfix(16)"
-      OutScaling	      "2^0"
-      LockScale		      off
-      RndMeth		      "Floor"
-      SaturateOnIntegerOverflow	on
-      SampleTime	      "-1"
     }
     Block {
       BlockType		      Inport
@@ -438,9 +444,11 @@ Model {
       BusOutputAsStruct	      off
       PortDimensions	      "-1"
       SampleTime	      "-1"
+      OutMin		      "[]"
+      OutMax		      "[]"
       DataType		      "auto"
-      OutDataType	      "sfix(16)"
-      OutScaling	      "2^0"
+      OutDataType	      "fixdt(1,16,0)"
+      OutScaling	      "[]"
       SignalType	      "auto"
       SamplingMode	      "auto"
       LatchByDelayingOutsideSignal off
@@ -460,6 +468,7 @@ Model {
       AbsoluteTolerance	      "auto"
       IgnoreLimit	      off
       ZeroCross		      on
+      ContinuousStateAttributes	"''"
     }
     Block {
       BlockType		      MATLABFcn
@@ -485,36 +494,18 @@ Model {
       BusOutputAsStruct	      off
       PortDimensions	      "-1"
       SampleTime	      "-1"
+      OutMin		      "[]"
+      OutMax		      "[]"
       DataType		      "auto"
-      OutDataType	      "sfix(16)"
-      OutScaling	      "2^0"
+      OutDataType	      "fixdt(1,16,0)"
+      OutScaling	      "[]"
       SignalType	      "auto"
       SamplingMode	      "auto"
       OutputWhenDisabled      "held"
       InitialOutput	      "[]"
     }
     Block {
-      BlockType		      RandomNumber
-      Mean		      "0"
-      Variance		      "1"
-      Seed		      "0"
-      SampleTime	      "-1"
-      VectorParams1D	      on
-    }
-    Block {
-      BlockType		      RateTransition
-      Integrity		      on
-      Deterministic	      on
-      X0		      "0"
-      OutPortSampleTime	      "-1"
-    }
-    Block {
-      BlockType		      Saturate
-      UpperLimit	      "0.5"
-      LowerLimit	      "-0.5"
-      LinearizeAsGain	      on
-      ZeroCross		      on
-      SampleTime	      "-1"
+      BlockType		      Reference
     }
     Block {
       BlockType		      Scope
@@ -535,12 +526,18 @@ Model {
     }
     Block {
       BlockType		      SubSystem
-      ShowPortLabels	      on
+      ShowPortLabels	      "FromPortIcon"
       Permissions	      "ReadWrite"
       PermitHierarchicalResolution "All"
+      TreatAsAtomicUnit	      off
       SystemSampleTime	      "-1"
       RTWFcnNameOpts	      "Auto"
       RTWFileNameOpts	      "Auto"
+      RTWMemSecFuncInitTerm   "Inherit from model"
+      RTWMemSecFuncExecute    "Inherit from model"
+      RTWMemSecDataConstants  "Inherit from model"
+      RTWMemSecDataInternal   "Inherit from model"
+      RTWMemSecDataParameters "Inherit from model"
       SimViewingDevice	      off
       DataTypeOverride	      "UseLocalSettings"
       MinMaxOverflowLogging   "UseLocalSettings"
@@ -549,17 +546,18 @@ Model {
       BlockType		      Sum
       IconShape		      "rectangular"
       Inputs		      "++"
+      CollapseMode	      "All dimensions"
+      CollapseDim	      "1"
       InputSameDT	      on
+      OutMin		      "[]"
+      OutMax		      "[]"
       OutDataTypeMode	      "Same as first input"
-      OutDataType	      "sfix(16)"
-      OutScaling	      "2^0"
+      OutDataType	      "fixdt(1,16,0)"
+      OutScaling	      "[]"
       LockScale		      off
       RndMeth		      "Floor"
       SaturateOnIntegerOverflow	on
       SampleTime	      "-1"
-    }
-    Block {
-      BlockType		      Terminator
     }
     Block {
       BlockType		      ToWorkspace
@@ -574,6 +572,7 @@ Model {
       Numerator		      "[1]"
       Denominator	      "[1 2 1]"
       AbsoluteTolerance	      "auto"
+      ContinuousStateAttributes	"''"
       Realization	      "auto"
     }
     Block {
@@ -584,6 +583,35 @@ Model {
       FixedBuffer	      off
       TransDelayFeedthrough   off
       PadeOrder		      "0"
+    }
+    Block {
+      BlockType		      Constant
+      Value		      "1"
+      VectorParams1D	      on
+      SamplingMode	      "Sample based"
+      OutMin		      "[]"
+      OutMax		      "[]"
+      OutDataTypeMode	      "Inherit from 'Constant value'"
+      OutDataType	      "fixdt(1,16,0)"
+      ConRadixGroup	      "Use specified scaling"
+      OutScaling	      "[]"
+      SampleTime	      "inf"
+      FramePeriod	      "inf"
+    }
+    Block {
+      BlockType		      Saturate
+      UpperLimit	      "0.5"
+      LowerLimit	      "-0.5"
+      LinearizeAsGain	      on
+      ZeroCross		      on
+      SampleTime	      "-1"
+      OutMin		      "[]"
+      OutMax		      "[]"
+      OutDataTypeMode	      "Same as input"
+      OutDataType	      "fixdt(1,16,0)"
+      OutScaling	      "[]"
+      LockScale		      off
+      RndMeth		      "Floor"
     }
   }
   AnnotationDefaults {
@@ -596,6 +624,7 @@ Model {
     FontSize		    10
     FontWeight		    "normal"
     FontAngle		    "normal"
+    UseDisplayTextAsClickCallback off
   }
   LineDefaults {
     FontName		    "Helvetica"
@@ -605,7 +634,7 @@ Model {
   }
   System {
     Name		    "systema"
-    Location		    [2, 82, 1022, 722]
+    Location		    [342, 254, 1362, 877]
     Open		    on
     ModelBrowserVisibility  off
     ModelBrowserWidth	    200
@@ -614,6 +643,9 @@ Model {
     PaperPositionMode	    "auto"
     PaperType		    "A4"
     PaperUnits		    "centimeters"
+    TiledPaperMargins	    [1.270000, 1.270000, 1.270000, 1.270000]
+    TiledPageScale	    1
+    ShowPageBoundaries	    off
     ZoomFactor		    "100"
     ReportName		    "simulink-default.rpt"
     Block {
@@ -623,10 +655,9 @@ Model {
       Position		      [355, 262, 415, 358]
       Orientation	      "left"
       BackgroundColor	      "lightBlue"
-      TreatAsAtomicUnit	      off
       MinAlgLoopOccurrences   off
       RTWSystemCode	      "Auto"
-      MaskHideContents	      off
+      FunctionWithSeparateData off
       System {
 	Name			"AERO"
 	Location		[2, 82, 1022, 722]
@@ -638,6 +669,9 @@ Model {
 	PaperPositionMode	"auto"
 	PaperType		"A4"
 	PaperUnits		"centimeters"
+	TiledPaperMargins	[1.270000, 1.270000, 1.270000, 1.270000]
+	TiledPageScale		1
+	ShowPageBoundaries	off
 	ZoomFactor		"100"
 	Block {
 	  BlockType		  Inport
@@ -645,6 +679,8 @@ Model {
 	  Position		  [800, 208, 830, 222]
 	  Orientation		  "left"
 	  IconDisplay		  "Port number"
+	  OutDataType		  "sfix(16)"
+	  OutScaling		  "2^0"
 	}
 	Block {
 	  BlockType		  Inport
@@ -653,10 +689,13 @@ Model {
 	  Orientation		  "left"
 	  Port			  "2"
 	  IconDisplay		  "Port number"
+	  OutDataType		  "sfix(16)"
+	  OutScaling		  "2^0"
 	}
 	Block {
 	  BlockType		  MATLABFcn
 	  Name			  "AERO\nAttitude [rad]"
+	  Ports			  [1, 1]
 	  Position		  [460, 260, 520, 290]
 	  Orientation		  "left"
 	  MATLABFcn		  "aero"
@@ -678,7 +717,8 @@ Model {
 	  Position		  [375, 268, 405, 282]
 	  Orientation		  "left"
 	  IconDisplay		  "Port number"
-	  BusOutputAsStruct	  off
+	  OutDataType		  "sfix(16)"
+	  OutScaling		  "2^0"
 	}
 	Line {
 	  SrcBlock		  "In1"
@@ -708,736 +748,6 @@ Model {
       }
     }
     Block {
-      BlockType		      SubSystem
-      Name		      "CONTROL"
-      Ports		      [5, 1]
-      Position		      [705, 290, 765, 380]
-      Orientation	      "left"
-      BackgroundColor	      "red"
-      TreatAsAtomicUnit	      off
-      MinAlgLoopOccurrences   off
-      RTWSystemCode	      "Auto"
-      MaskHideContents	      off
-      System {
-	Name			"CONTROL"
-	Location		[2, 82, 1022, 722]
-	Open			off
-	ModelBrowserVisibility	off
-	ModelBrowserWidth	200
-	ScreenColor		"white"
-	PaperOrientation	"landscape"
-	PaperPositionMode	"auto"
-	PaperType		"A4"
-	PaperUnits		"centimeters"
-	ZoomFactor		"100"
-	Block {
-	  BlockType		  Inport
-	  Name			  "In1"
-	  Position		  [800, 208, 830, 222]
-	  Orientation		  "left"
-	  IconDisplay		  "Port number"
-	}
-	Block {
-	  BlockType		  Inport
-	  Name			  "In2"
-	  Position		  [800, 268, 830, 282]
-	  Orientation		  "left"
-	  Port			  "2"
-	  IconDisplay		  "Port number"
-	}
-	Block {
-	  BlockType		  Inport
-	  Name			  "In3"
-	  Position		  [805, 303, 835, 317]
-	  Orientation		  "left"
-	  Port			  "3"
-	  IconDisplay		  "Port number"
-	}
-	Block {
-	  BlockType		  Inport
-	  Name			  "In4"
-	  Position		  [800, 483, 830, 497]
-	  Orientation		  "left"
-	  Port			  "4"
-	  IconDisplay		  "Port number"
-	}
-	Block {
-	  BlockType		  Inport
-	  Name			  "In5"
-	  Position		  [800, 513, 830, 527]
-	  Orientation		  "left"
-	  Port			  "5"
-	  IconDisplay		  "Port number"
-	}
-	Block {
-	  BlockType		  MATLABFcn
-	  Name			  "ALT_CONTROL"
-	  Position		  [475, 405, 535, 435]
-	  Orientation		  "left"
-	  MATLABFcn		  "alt_control"
-	  OutputDimensions	  "1"
-	  SampleTime		  "0.05"
-	}
-	Block {
-	  BlockType		  Mux
-	  Name			  "Mux1"
-	  Ports			  [4, 1]
-	  Position		  [645, 248, 650, 317]
-	  Orientation		  "left"
-	  ShowName		  off
-	  DisplayOption		  "bar"
-	}
-	Block {
-	  BlockType		  Mux
-	  Name			  "Mux3"
-	  Ports			  [4, 1]
-	  Position		  [575, 384, 580, 456]
-	  Orientation		  "left"
-	  ShowName		  off
-	  DisplayOption		  "bar"
-	}
-	Block {
-	  BlockType		  Mux
-	  Name			  "Mux4"
-	  Ports			  [4, 1]
-	  Position		  [305, 258, 310, 327]
-	  Orientation		  "left"
-	  ShowName		  off
-	  DisplayOption		  "bar"
-	}
-	Block {
-	  BlockType		  SubSystem
-	  Name			  "RATE TRANSITION IN"
-	  Ports			  [1, 3]
-	  Position		  [675, 402, 715, 438]
-	  Orientation		  "left"
-	  TreatAsAtomicUnit	  off
-	  MinAlgLoopOccurrences	  off
-	  RTWSystemCode		  "Auto"
-	  MaskHideContents	  off
-	  System {
-	    Name		    "RATE TRANSITION IN"
-	    Location		    [2, 82, 1022, 744]
-	    Open		    off
-	    ModelBrowserVisibility  off
-	    ModelBrowserWidth	    200
-	    ScreenColor		    "white"
-	    PaperOrientation	    "landscape"
-	    PaperPositionMode	    "auto"
-	    PaperType		    "A4"
-	    PaperUnits		    "centimeters"
-	    ZoomFactor		    "100"
-	    Block {
-	      BlockType		      Inport
-	      Name		      "In1"
-	      Position		      [250, 308, 280, 322]
-	      IconDisplay	      "Port number"
-	    }
-	    Block {
-	      BlockType		      Demux
-	      Name		      "Demux"
-	      Ports		      [1, 12]
-	      Position		      [370, 34, 380, 591]
-	      BackgroundColor	      "black"
-	      ShowName		      off
-	      Outputs		      "12"
-	    }
-	    Block {
-	      BlockType		      RateTransition
-	      Name		      "Pitch Rate Transition"
-	      Position		      [550, 133, 590, 177]
-	      Deterministic	      off
-	      OutPortSampleTime	      "50E-3"
-	    }
-	    Block {
-	      BlockType		      RateTransition
-	      Name		      "Roll Rate Transition"
-	      Position		      [555, 43, 595, 87]
-	      Deterministic	      off
-	      OutPortSampleTime	      "50E-3"
-	    }
-	    Block {
-	      BlockType		      Terminator
-	      Name		      "Terminator1"
-	      Position		      [460, 100, 480, 120]
-	    }
-	    Block {
-	      BlockType		      Terminator
-	      Name		      "Terminator12"
-	      Position		      [470, 550, 490, 570]
-	    }
-	    Block {
-	      BlockType		      Terminator
-	      Name		      "Terminator14"
-	      Position		      [470, 505, 490, 525]
-	    }
-	    Block {
-	      BlockType		      Terminator
-	      Name		      "Terminator3"
-	      Position		      [460, 190, 480, 210]
-	    }
-	    Block {
-	      BlockType		      Terminator
-	      Name		      "Terminator4"
-	      Position		      [460, 235, 480, 255]
-	    }
-	    Block {
-	      BlockType		      Terminator
-	      Name		      "Terminator5"
-	      Position		      [460, 280, 480, 300]
-	    }
-	    Block {
-	      BlockType		      Terminator
-	      Name		      "Terminator6"
-	      Position		      [460, 370, 480, 390]
-	    }
-	    Block {
-	      BlockType		      Terminator
-	      Name		      "Terminator7"
-	      Position		      [470, 415, 490, 435]
-	    }
-	    Block {
-	      BlockType		      Terminator
-	      Name		      "Terminator8"
-	      Position		      [470, 460, 490, 480]
-	    }
-	    Block {
-	      BlockType		      RateTransition
-	      Name		      "Z Rate Transition"
-	      Position		      [550, 313, 590, 357]
-	      Deterministic	      off
-	      OutPortSampleTime	      "50E-3"
-	    }
-	    Block {
-	      BlockType		      Outport
-	      Name		      "Out1"
-	      Position		      [830, 58, 860, 72]
-	      IconDisplay	      "Port number"
-	      BusOutputAsStruct	      off
-	    }
-	    Block {
-	      BlockType		      Outport
-	      Name		      "Out2"
-	      Position		      [835, 148, 865, 162]
-	      Port		      "2"
-	      IconDisplay	      "Port number"
-	      BusOutputAsStruct	      off
-	    }
-	    Block {
-	      BlockType		      Outport
-	      Name		      "Out3"
-	      Position		      [835, 328, 865, 342]
-	      Port		      "3"
-	      IconDisplay	      "Port number"
-	      BusOutputAsStruct	      off
-	    }
-	    Line {
-	      SrcBlock		      "Demux"
-	      SrcPort		      7
-	      DstBlock		      "Z Rate Transition"
-	      DstPort		      1
-	    }
-	    Line {
-	      SrcBlock		      "In1"
-	      SrcPort		      1
-	      DstBlock		      "Demux"
-	      DstPort		      1
-	    }
-	    Line {
-	      SrcBlock		      "Demux"
-	      SrcPort		      1
-	      DstBlock		      "Roll Rate Transition"
-	      DstPort		      1
-	    }
-	    Line {
-	      SrcBlock		      "Demux"
-	      SrcPort		      2
-	      DstBlock		      "Terminator1"
-	      DstPort		      1
-	    }
-	    Line {
-	      SrcBlock		      "Demux"
-	      SrcPort		      3
-	      DstBlock		      "Pitch Rate Transition"
-	      DstPort		      1
-	    }
-	    Line {
-	      SrcBlock		      "Demux"
-	      SrcPort		      4
-	      DstBlock		      "Terminator3"
-	      DstPort		      1
-	    }
-	    Line {
-	      SrcBlock		      "Demux"
-	      SrcPort		      5
-	      DstBlock		      "Terminator4"
-	      DstPort		      1
-	    }
-	    Line {
-	      SrcBlock		      "Demux"
-	      SrcPort		      6
-	      DstBlock		      "Terminator5"
-	      DstPort		      1
-	    }
-	    Line {
-	      SrcBlock		      "Demux"
-	      SrcPort		      9
-	      DstBlock		      "Terminator7"
-	      DstPort		      1
-	    }
-	    Line {
-	      SrcBlock		      "Demux"
-	      SrcPort		      10
-	      DstBlock		      "Terminator8"
-	      DstPort		      1
-	    }
-	    Line {
-	      SrcBlock		      "Demux"
-	      SrcPort		      11
-	      DstBlock		      "Terminator14"
-	      DstPort		      1
-	    }
-	    Line {
-	      SrcBlock		      "Demux"
-	      SrcPort		      12
-	      DstBlock		      "Terminator12"
-	      DstPort		      1
-	    }
-	    Line {
-	      SrcBlock		      "Demux"
-	      SrcPort		      8
-	      DstBlock		      "Terminator6"
-	      DstPort		      1
-	    }
-	    Line {
-	      SrcBlock		      "Roll Rate Transition"
-	      SrcPort		      1
-	      DstBlock		      "Out1"
-	      DstPort		      1
-	    }
-	    Line {
-	      SrcBlock		      "Pitch Rate Transition"
-	      SrcPort		      1
-	      DstBlock		      "Out2"
-	      DstPort		      1
-	    }
-	    Line {
-	      SrcBlock		      "Z Rate Transition"
-	      SrcPort		      1
-	      DstBlock		      "Out3"
-	      DstPort		      1
-	    }
-	  }
-	}
-	Block {
-	  BlockType		  SubSystem
-	  Name			  "RATE TRANSITION OUT"
-	  Ports			  [1, 1]
-	  Position		  [375, 404, 415, 436]
-	  Orientation		  "left"
-	  TreatAsAtomicUnit	  off
-	  MinAlgLoopOccurrences	  off
-	  RTWSystemCode		  "Auto"
-	  MaskHideContents	  off
-	  System {
-	    Name		    "RATE TRANSITION OUT"
-	    Location		    [2, 82, 1022, 744]
-	    Open		    off
-	    ModelBrowserVisibility  off
-	    ModelBrowserWidth	    200
-	    ScreenColor		    "white"
-	    PaperOrientation	    "landscape"
-	    PaperPositionMode	    "auto"
-	    PaperType		    "A4"
-	    PaperUnits		    "centimeters"
-	    ZoomFactor		    "100"
-	    Block {
-	      BlockType		      Inport
-	      Name		      "In1"
-	      Position		      [250, 308, 280, 322]
-	      IconDisplay	      "Port number"
-	    }
-	    Block {
-	      BlockType		      RateTransition
-	      Name		      "Rate Transition1"
-	      Position		      [575, 293, 615, 337]
-	      Deterministic	      off
-	    }
-	    Block {
-	      BlockType		      Outport
-	      Name		      "Out1"
-	      Position		      [930, 308, 960, 322]
-	      IconDisplay	      "Port number"
-	      BusOutputAsStruct	      off
-	    }
-	    Line {
-	      SrcBlock		      "In1"
-	      SrcPort		      1
-	      DstBlock		      "Rate Transition1"
-	      DstPort		      1
-	    }
-	    Line {
-	      SrcBlock		      "Rate Transition1"
-	      SrcPort		      1
-	      DstBlock		      "Out1"
-	      DstPort		      1
-	    }
-	  }
-	}
-	Block {
-	  BlockType		  MATLABFcn
-	  Name			  "ROT_CONTROL"
-	  Position		  [200, 280, 260, 310]
-	  Orientation		  "left"
-	  MATLABFcn		  "back_rot_control"
-	  OutputDimensions	  "6"
-	}
-	Block {
-	  BlockType		  MATLABFcn
-	  Name			  "x,ySPD_CONTROL"
-	  Position		  [420, 270, 480, 300]
-	  Orientation		  "left"
-	  MATLABFcn		  "spd_control"
-	  OutputDimensions	  "2"
-	}
-	Block {
-	  BlockType		  Outport
-	  Name			  "Out1"
-	  Position		  [100, 288, 130, 302]
-	  Orientation		  "left"
-	  IconDisplay		  "Port number"
-	  BusOutputAsStruct	  off
-	}
-	Line {
-	  SrcBlock		  "Mux1"
-	  SrcPort		  1
-	  DstBlock		  "x,ySPD_CONTROL"
-	  DstPort		  1
-	}
-	Line {
-	  SrcBlock		  "ROT_CONTROL"
-	  SrcPort		  1
-	  Points		  [0, 0]
-	  DstBlock		  "Out1"
-	  DstPort		  1
-	}
-	Line {
-	  SrcBlock		  "In1"
-	  SrcPort		  1
-	  Points		  [-25, 0]
-	  Branch {
-	    Points		    [-425, 0; 0, 55]
-	    DstBlock		    "Mux4"
-	    DstPort		    1
-	  }
-	  Branch {
-	    Points		    [0, 45]
-	    Branch {
-	      DstBlock		      "Mux1"
-	      DstPort		      1
-	    }
-	    Branch {
-	      Points		      [0, 160]
-	      DstBlock		      "RATE TRANSITION IN"
-	      DstPort		      1
-	    }
-	  }
-	}
-	Line {
-	  SrcBlock		  "In2"
-	  SrcPort		  1
-	  DstBlock		  "Mux1"
-	  DstPort		  2
-	}
-	Line {
-	  SrcBlock		  "x,ySPD_CONTROL"
-	  SrcPort		  1
-	  DstBlock		  "Mux4"
-	  DstPort		  2
-	}
-	Line {
-	  SrcBlock		  "Mux4"
-	  SrcPort		  1
-	  Points		  [0, 0]
-	  DstBlock		  "ROT_CONTROL"
-	  DstPort		  1
-	}
-	Line {
-	  SrcBlock		  "ALT_CONTROL"
-	  SrcPort		  1
-	  Points		  [0, 0]
-	  DstBlock		  "RATE TRANSITION OUT"
-	  DstPort		  1
-	}
-	Line {
-	  SrcBlock		  "In5"
-	  SrcPort		  1
-	  Points		  [-470, 0]
-	  DstBlock		  "Mux4"
-	  DstPort		  4
-	}
-	Line {
-	  SrcBlock		  "RATE TRANSITION OUT"
-	  SrcPort		  1
-	  Points		  [-25, 0; 0, -65]
-	  Branch {
-	    Points		    [0, -55]
-	    DstBlock		    "Mux4"
-	    DstPort		    3
-	  }
-	  Branch {
-	    Points		    [320, 0]
-	    DstBlock		    "Mux1"
-	    DstPort		    4
-	  }
-	}
-	Line {
-	  SrcBlock		  "Mux3"
-	  SrcPort		  1
-	  DstBlock		  "ALT_CONTROL"
-	  DstPort		  1
-	}
-	Line {
-	  SrcBlock		  "RATE TRANSITION IN"
-	  SrcPort		  1
-	  Points		  [0, -20]
-	  DstBlock		  "Mux3"
-	  DstPort		  1
-	}
-	Line {
-	  SrcBlock		  "RATE TRANSITION IN"
-	  SrcPort		  2
-	  Points		  [-35, 0; 0, -10]
-	  DstBlock		  "Mux3"
-	  DstPort		  2
-	}
-	Line {
-	  SrcBlock		  "RATE TRANSITION IN"
-	  SrcPort		  3
-	  DstBlock		  "Mux3"
-	  DstPort		  3
-	}
-	Line {
-	  SrcBlock		  "In4"
-	  SrcPort		  1
-	  Points		  [-200, 0]
-	  DstBlock		  "Mux3"
-	  DstPort		  4
-	}
-	Line {
-	  SrcBlock		  "In3"
-	  SrcPort		  1
-	  Points		  [-65, 0; 0, -20]
-	  DstBlock		  "Mux1"
-	  DstPort		  3
-	}
-      }
-    }
-    Block {
-      BlockType		      SubSystem
-      Name		      "CONTROL VECTOR U"
-      Ports		      [1]
-      Position		      [675, 443, 760, 487]
-      TreatAsAtomicUnit	      off
-      MinAlgLoopOccurrences   off
-      RTWSystemCode	      "Auto"
-      MaskHideContents	      off
-      System {
-	Name			"CONTROL VECTOR U"
-	Location		[2, 82, 1022, 722]
-	Open			off
-	ModelBrowserVisibility	off
-	ModelBrowserWidth	200
-	ScreenColor		"white"
-	PaperOrientation	"landscape"
-	PaperPositionMode	"auto"
-	PaperType		"A4"
-	PaperUnits		"centimeters"
-	ZoomFactor		"100"
-	Block {
-	  BlockType		  Inport
-	  Name			  "In1"
-	  Position		  [295, 308, 325, 322]
-	  IconDisplay		  "Port number"
-	}
-	Block {
-	  BlockType		  Demux
-	  Name			  "Demux1"
-	  Ports			  [1, 6]
-	  Position		  [430, 238, 435, 397]
-	  BackgroundColor	  "black"
-	  ShowName		  off
-	  Outputs		  "6"
-	}
-	Block {
-	  BlockType		  Scope
-	  Name			  "U1"
-	  Ports			  [1]
-	  Position		  [475, 239, 505, 271]
-	  Floating		  off
-	  Location		  [5, 52, 1021, 759]
-	  Open			  off
-	  NumInputPorts		  "1"
-	  List {
-	    ListType		    AxesTitles
-	    axes1		    "%<SignalLabel>"
-	  }
-	  TimeRange		  "3.5"
-	  YMin			  "144.101"
-	  YMax			  "144.104"
-	  SaveName		  "ScopeData7"
-	  DataFormat		  "StructureWithTime"
-	  LimitDataPoints	  off
-	  SampleTime		  "0"
-	}
-	Block {
-	  BlockType		  Scope
-	  Name			  "U2"
-	  Ports			  [1]
-	  Position		  [550, 264, 580, 296]
-	  Floating		  off
-	  Location		  [674, 56, 1019, 356]
-	  Open			  off
-	  NumInputPorts		  "1"
-	  List {
-	    ListType		    AxesTitles
-	    axes1		    "%<SignalLabel>"
-	  }
-	  YMin			  "-0.6"
-	  YMax			  "0.4"
-	  SaveName		  "ScopeData8"
-	  DataFormat		  "StructureWithTime"
-	  LimitDataPoints	  off
-	  SampleTime		  "0"
-	}
-	Block {
-	  BlockType		  Scope
-	  Name			  "U3"
-	  Ports			  [1]
-	  Position		  [480, 289, 510, 321]
-	  Floating		  off
-	  Location		  [679, 422, 1019, 729]
-	  Open			  off
-	  NumInputPorts		  "1"
-	  List {
-	    ListType		    AxesTitles
-	    axes1		    "%<SignalLabel>"
-	  }
-	  YMin			  "-0.65"
-	  YMax			  "0.35"
-	  SaveName		  "ScopeData9"
-	  DataFormat		  "StructureWithTime"
-	  LimitDataPoints	  off
-	  SampleTime		  "0"
-	}
-	Block {
-	  BlockType		  Scope
-	  Name			  "U4"
-	  Ports			  [1]
-	  Position		  [590, 314, 620, 346]
-	  Floating		  off
-	  Location		  [5, 52, 1021, 729]
-	  Open			  off
-	  NumInputPorts		  "1"
-	  List {
-	    ListType		    AxesTitles
-	    axes1		    "%<SignalLabel>"
-	  }
-	  YMin			  "0"
-	  YMax			  "150"
-	  SaveName		  "ScopeData14"
-	  DataFormat		  "StructureWithTime"
-	  LimitDataPoints	  off
-	  SampleTime		  "0"
-	}
-	Block {
-	  BlockType		  Scope
-	  Name			  "e1"
-	  Ports			  [1]
-	  Position		  [515, 354, 545, 386]
-	  Floating		  off
-	  Location		  [102, 458, 407, 762]
-	  Open			  on
-	  NumInputPorts		  "1"
-	  List {
-	    ListType		    AxesTitles
-	    axes1		    "%<SignalLabel>"
-	  }
-	  YMin			  "0"
-	  YMax			  "150"
-	  SaveName		  "ScopeData11"
-	  DataFormat		  "StructureWithTime"
-	  LimitDataPoints	  off
-	  SampleTime		  "0"
-	}
-	Block {
-	  BlockType		  Scope
-	  Name			  "e2"
-	  Ports			  [1]
-	  Position		  [500, 419, 530, 451]
-	  Floating		  off
-	  Location		  [339, 59, 682, 351]
-	  Open			  off
-	  NumInputPorts		  "1"
-	  List {
-	    ListType		    AxesTitles
-	    axes1		    "%<SignalLabel>"
-	  }
-	  YMin			  "0"
-	  YMax			  "150"
-	  SaveName		  "ScopeData12"
-	  DataFormat		  "StructureWithTime"
-	  LimitDataPoints	  off
-	  SampleTime		  "0"
-	}
-	Line {
-	  SrcBlock		  "In1"
-	  SrcPort		  1
-	  Points		  [85, 0]
-	  DstBlock		  "Demux1"
-	  DstPort		  1
-	}
-	Line {
-	  SrcBlock		  "Demux1"
-	  SrcPort		  4
-	  DstBlock		  "U4"
-	  DstPort		  1
-	}
-	Line {
-	  SrcBlock		  "Demux1"
-	  SrcPort		  3
-	  DstBlock		  "U3"
-	  DstPort		  1
-	}
-	Line {
-	  SrcBlock		  "Demux1"
-	  SrcPort		  2
-	  DstBlock		  "U2"
-	  DstPort		  1
-	}
-	Line {
-	  SrcBlock		  "Demux1"
-	  SrcPort		  1
-	  DstBlock		  "U1"
-	  DstPort		  1
-	}
-	Line {
-	  SrcBlock		  "Demux1"
-	  SrcPort		  5
-	  Points		  [60, 0]
-	  DstBlock		  "e1"
-	  DstPort		  1
-	}
-	Line {
-	  SrcBlock		  "Demux1"
-	  SrcPort		  6
-	  Points		  [10, 0; 0, 55]
-	  DstBlock		  "e2"
-	  DstPort		  1
-	}
-      }
-    }
-    Block {
       BlockType		      Clock
       Name		      "Clock"
       Position		      [485, 565, 505, 585]
@@ -1449,10 +759,9 @@ Model {
       Ports		      [1, 1]
       Position		      [635, 172, 770, 208]
       BackgroundColor	      "gray"
-      TreatAsAtomicUnit	      off
       MinAlgLoopOccurrences   off
       RTWSystemCode	      "Auto"
-      MaskHideContents	      off
+      FunctionWithSeparateData off
       System {
 	Name			"DELAY - NOISE - FILTER"
 	Location		[992, 83, 2030, 394]
@@ -1464,22 +773,26 @@ Model {
 	PaperPositionMode	"auto"
 	PaperType		"A4"
 	PaperUnits		"centimeters"
+	TiledPaperMargins	[1.270000, 1.270000, 1.270000, 1.270000]
+	TiledPageScale		1
+	ShowPageBoundaries	off
 	ZoomFactor		"100"
 	Block {
 	  BlockType		  Inport
 	  Name			  "In1"
 	  Position		  [170, 248, 200, 262]
 	  IconDisplay		  "Port number"
+	  OutDataType		  "sfix(16)"
+	  OutScaling		  "2^0"
 	}
 	Block {
 	  BlockType		  SubSystem
 	  Name			  "DELAYS"
 	  Ports			  [1, 1]
 	  Position		  [320, 239, 360, 271]
-	  TreatAsAtomicUnit	  off
 	  MinAlgLoopOccurrences	  off
 	  RTWSystemCode		  "Auto"
-	  MaskHideContents	  off
+	  FunctionWithSeparateData off
 	  System {
 	    Name		    "DELAYS"
 	    Location		    [1009, 82, 2021, 722]
@@ -1491,12 +804,17 @@ Model {
 	    PaperPositionMode	    "auto"
 	    PaperType		    "A4"
 	    PaperUnits		    "centimeters"
+	    TiledPaperMargins	    [1.270000, 1.270000, 1.270000, 1.270000]
+	    TiledPageScale	    1
+	    ShowPageBoundaries	    off
 	    ZoomFactor		    "100"
 	    Block {
 	      BlockType		      Inport
 	      Name		      "In1"
 	      Position		      [250, 308, 280, 322]
 	      IconDisplay	      "Port number"
+	      OutDataType	      "sfix(16)"
+	      OutScaling	      "2^0"
 	    }
 	    Block {
 	      BlockType		      Demux
@@ -1557,7 +875,8 @@ Model {
 	      Name		      "Out1"
 	      Position		      [930, 308, 960, 322]
 	      IconDisplay	      "Port number"
-	      BusOutputAsStruct	      off
+	      OutDataType	      "sfix(16)"
+	      OutScaling	      "2^0"
 	    }
 	    Line {
 	      SrcBlock		      "dot ROLLTransport\nDelay"
@@ -1685,6 +1004,7 @@ Model {
 	Block {
 	  BlockType		  MATLABFcn
 	  Name			  "LP FILTER"
+	  Ports			  [1, 1]
 	  Position		  [640, 240, 700, 270]
 	  MATLABFcn		  "sam5_filter"
 	  OutputDimensions	  "12"
@@ -1692,19 +1012,16 @@ Model {
 	}
 	Block {
 	  BlockType		  SubSystem
-	  Name			  "NOISY DATA SCOPES\nAttitude [rad]\nAng. rat"
-"es [rad/sec]\nposition [m]\nPos. rates [m/s]1"
+	  Name			  "NOISY DATA SCOPES\nAttitude [rad]\nAng. rates [rad/sec]\nposition [m]\nPos. rates [m/s]1"
 	  Ports			  [1]
 	  Position		  [569, 95, 631, 135]
 	  Orientation		  "up"
 	  BackgroundColor	  "green"
-	  TreatAsAtomicUnit	  off
 	  MinAlgLoopOccurrences	  off
 	  RTWSystemCode		  "Auto"
-	  MaskHideContents	  off
+	  FunctionWithSeparateData off
 	  System {
-	    Name		    "NOISY DATA SCOPES\nAttitude [rad]\nAng. r"
-"ates [rad/sec]\nposition [m]\nPos. rates [m/s]1"
+	    Name		    "NOISY DATA SCOPES\nAttitude [rad]\nAng. rates [rad/sec]\nposition [m]\nPos. rates [m/s]1"
 	    Location		    [-8, 98, 1016, 760]
 	    Open		    off
 	    ModelBrowserVisibility  off
@@ -1714,12 +1031,17 @@ Model {
 	    PaperPositionMode	    "auto"
 	    PaperType		    "A4"
 	    PaperUnits		    "centimeters"
+	    TiledPaperMargins	    [1.270000, 1.270000, 1.270000, 1.270000]
+	    TiledPageScale	    1
+	    ShowPageBoundaries	    off
 	    ZoomFactor		    "100"
 	    Block {
 	      BlockType		      Inport
 	      Name		      "In1"
 	      Position		      [120, 353, 150, 367]
 	      IconDisplay	      "Port number"
+	      OutDataType	      "sfix(16)"
+	      OutScaling	      "2^0"
 	    }
 	    Block {
 	      BlockType		      Demux
@@ -2064,10 +1386,9 @@ Model {
 	  Name			  "W. NORMAL NOISE"
 	  Ports			  [1, 1]
 	  Position		  [435, 239, 475, 271]
-	  TreatAsAtomicUnit	  off
 	  MinAlgLoopOccurrences	  off
 	  RTWSystemCode		  "Auto"
-	  MaskHideContents	  off
+	  FunctionWithSeparateData off
 	  System {
 	    Name		    "W. NORMAL NOISE"
 	    Location		    [1016, 88, 1843, 514]
@@ -2079,12 +1400,17 @@ Model {
 	    PaperPositionMode	    "auto"
 	    PaperType		    "A4"
 	    PaperUnits		    "centimeters"
+	    TiledPaperMargins	    [1.270000, 1.270000, 1.270000, 1.270000]
+	    TiledPageScale	    1
+	    ShowPageBoundaries	    off
 	    ZoomFactor		    "100"
 	    Block {
 	      BlockType		      Inport
 	      Name		      "In1"
 	      Position		      [250, 308, 280, 322]
 	      IconDisplay	      "Port number"
+	      OutDataType	      "sfix(16)"
+	      OutScaling	      "2^0"
 	    }
 	    Block {
 	      BlockType		      Demux
@@ -2114,6 +1440,8 @@ Model {
 	      Inputs		      "|++"
 	      InputSameDT	      off
 	      OutDataTypeMode	      "Inherit via internal rule"
+	      OutDataType	      "sfix(16)"
+	      OutScaling	      "2^0"
 	    }
 	    Block {
 	      BlockType		      Sum
@@ -2125,6 +1453,8 @@ Model {
 	      Inputs		      "|++"
 	      InputSameDT	      off
 	      OutDataTypeMode	      "Inherit via internal rule"
+	      OutDataType	      "sfix(16)"
+	      OutScaling	      "2^0"
 	    }
 	    Block {
 	      BlockType		      Sum
@@ -2136,6 +1466,8 @@ Model {
 	      Inputs		      "|++"
 	      InputSameDT	      off
 	      OutDataTypeMode	      "Inherit via internal rule"
+	      OutDataType	      "sfix(16)"
+	      OutScaling	      "2^0"
 	    }
 	    Block {
 	      BlockType		      Sum
@@ -2147,6 +1479,8 @@ Model {
 	      Inputs		      "|++"
 	      InputSameDT	      off
 	      OutDataTypeMode	      "Inherit via internal rule"
+	      OutDataType	      "sfix(16)"
+	      OutScaling	      "2^0"
 	    }
 	    Block {
 	      BlockType		      Sum
@@ -2158,6 +1492,8 @@ Model {
 	      Inputs		      "|++"
 	      InputSameDT	      off
 	      OutDataTypeMode	      "Inherit via internal rule"
+	      OutDataType	      "sfix(16)"
+	      OutScaling	      "2^0"
 	    }
 	    Block {
 	      BlockType		      Sum
@@ -2169,6 +1505,8 @@ Model {
 	      Inputs		      "|++"
 	      InputSameDT	      off
 	      OutDataTypeMode	      "Inherit via internal rule"
+	      OutDataType	      "sfix(16)"
+	      OutScaling	      "2^0"
 	    }
 	    Block {
 	      BlockType		      Sum
@@ -2180,111 +1518,107 @@ Model {
 	      Inputs		      "|++"
 	      InputSameDT	      off
 	      OutDataTypeMode	      "Inherit via internal rule"
+	      OutDataType	      "sfix(16)"
+	      OutScaling	      "2^0"
 	    }
 	    Block {
 	      BlockType		      Reference
 	      Name		      "dot pitchw noise"
 	      Ports		      [0, 1]
 	      Position		      [420, 167, 435, 183]
-	      SourceBlock	      "simulink/Sources/Band-Limited\nWhite No"
-"ise"
+	      SourceBlock	      "simulink/Sources/Band-Limited\nWhite Noise"
 	      SourceType	      "Band-Limited White Noise."
-	      ShowPortLabels	      on
+	      ShowPortLabels	      "on"
 	      Cov		      "[0.0001]"
 	      Ts		      "0.01"
 	      seed		      "[23341]"
-	      VectorParams1D	      on
+	      VectorParams1D	      "on"
 	    }
 	    Block {
 	      BlockType		      Reference
 	      Name		      "dot roll w noise"
 	      Ports		      [0, 1]
 	      Position		      [430, 77, 445, 93]
-	      SourceBlock	      "simulink/Sources/Band-Limited\nWhite No"
-"ise"
+	      SourceBlock	      "simulink/Sources/Band-Limited\nWhite Noise"
 	      SourceType	      "Band-Limited White Noise."
-	      ShowPortLabels	      on
+	      ShowPortLabels	      "on"
 	      Cov		      "[0.0001]"
 	      Ts		      "0.01"
 	      seed		      "[23341]"
-	      VectorParams1D	      on
+	      VectorParams1D	      "on"
 	    }
 	    Block {
 	      BlockType		      Reference
 	      Name		      "dot yaw w noise"
 	      Ports		      [0, 1]
 	      Position		      [420, 257, 435, 273]
-	      SourceBlock	      "simulink/Sources/Band-Limited\nWhite No"
-"ise"
+	      SourceBlock	      "simulink/Sources/Band-Limited\nWhite Noise"
 	      SourceType	      "Band-Limited White Noise."
-	      ShowPortLabels	      on
+	      ShowPortLabels	      "on"
 	      Cov		      "[0.0001]"
 	      Ts		      "0.01"
 	      seed		      "[23341]"
-	      VectorParams1D	      on
+	      VectorParams1D	      "on"
 	    }
 	    Block {
 	      BlockType		      Reference
 	      Name		      "pitch w noise"
 	      Ports		      [0, 1]
 	      Position		      [425, 122, 440, 138]
-	      SourceBlock	      "simulink/Sources/Band-Limited\nWhite No"
-"ise"
+	      SourceBlock	      "simulink/Sources/Band-Limited\nWhite Noise"
 	      SourceType	      "Band-Limited White Noise."
-	      ShowPortLabels	      on
+	      ShowPortLabels	      "on"
 	      Cov		      "[0.00001]"
 	      Ts		      "0.01"
 	      seed		      "[23341]"
-	      VectorParams1D	      on
+	      VectorParams1D	      "on"
 	    }
 	    Block {
 	      BlockType		      Reference
 	      Name		      "roll w noise"
 	      Ports		      [0, 1]
 	      Position		      [425, 32, 440, 48]
-	      SourceBlock	      "simulink/Sources/Band-Limited\nWhite No"
-"ise"
+	      SourceBlock	      "simulink/Sources/Band-Limited\nWhite Noise"
 	      SourceType	      "Band-Limited White Noise."
-	      ShowPortLabels	      on
+	      ShowPortLabels	      "on"
 	      Cov		      "[0.00001]"
 	      Ts		      "0.01"
 	      seed		      "[24431]"
-	      VectorParams1D	      on
+	      VectorParams1D	      "on"
 	    }
 	    Block {
 	      BlockType		      Reference
 	      Name		      "yaw w noise"
 	      Ports		      [0, 1]
 	      Position		      [425, 212, 440, 228]
-	      SourceBlock	      "simulink/Sources/Band-Limited\nWhite No"
-"ise"
+	      SourceBlock	      "simulink/Sources/Band-Limited\nWhite Noise"
 	      SourceType	      "Band-Limited White Noise."
-	      ShowPortLabels	      on
+	      ShowPortLabels	      "on"
 	      Cov		      "[0.00001]"
 	      Ts		      "0.01"
 	      seed		      "[23341]"
-	      VectorParams1D	      on
+	      VectorParams1D	      "on"
 	    }
 	    Block {
 	      BlockType		      Reference
 	      Name		      "z w noise"
 	      Ports		      [0, 1]
 	      Position		      [420, 302, 435, 318]
-	      SourceBlock	      "simulink/Sources/Band-Limited\nWhite No"
-"ise"
+	      SourceBlock	      "simulink/Sources/Band-Limited\nWhite Noise"
 	      SourceType	      "Band-Limited White Noise."
-	      ShowPortLabels	      on
+	      ShowPortLabels	      "on"
 	      Cov		      "[0.00001]"
 	      Ts		      "0.01"
 	      seed		      "[23341]"
-	      VectorParams1D	      on
+	      VectorParams1D	      "on"
 	    }
 	    Block {
 	      BlockType		      Outport
 	      Name		      "Out1"
 	      Position		      [930, 308, 960, 322]
 	      IconDisplay	      "Port number"
-	      BusOutputAsStruct	      off
+	      OutDataType	      "sfix(16)"
+	      OutScaling	      "2^0"
 	    }
 	    Line {
 	      SrcBlock		      "Demux"
@@ -2466,7 +1800,6 @@ Model {
 	    Annotation {
 	      Name		      "white noise (varius power)"
 	      Position		      [579, 17]
-	      UseDisplayTextAsClickCallback off
 	    }
 	  }
 	}
@@ -2475,7 +1808,8 @@ Model {
 	  Name			  "Out1"
 	  Position		  [775, 248, 805, 262]
 	  IconDisplay		  "Port number"
-	  BusOutputAsStruct	  off
+	  OutDataType		  "sfix(16)"
+	  OutScaling		  "2^0"
 	}
 	Line {
 	  SrcBlock		  "In1"
@@ -2495,8 +1829,7 @@ Model {
 	  Points		  [60, 0]
 	  Branch {
 	    Points		    [0, -50; 60, 0]
-	    DstBlock		    "NOISY DATA SCOPES\nAttitude [rad]\nAng. r"
-"ates [rad/sec]\nposition [m]\nPos. rates [m/s]1"
+	    DstBlock		    "NOISY DATA SCOPES\nAttitude [rad]\nAng. rates [rad/sec]\nposition [m]\nPos. rates [m/s]1"
 	    DstPort		    1
 	  }
 	  Branch {
@@ -2519,10 +1852,9 @@ Model {
       Position		      [175, 262, 235, 358]
       Orientation	      "left"
       BackgroundColor	      "yellow"
-      TreatAsAtomicUnit	      off
       MinAlgLoopOccurrences   off
       RTWSystemCode	      "Auto"
-      MaskHideContents	      off
+      FunctionWithSeparateData off
       System {
 	Name			"DYNAMICS"
 	Location		[2, 82, 1022, 722]
@@ -2534,6 +1866,9 @@ Model {
 	PaperPositionMode	"auto"
 	PaperType		"A4"
 	PaperUnits		"centimeters"
+	TiledPaperMargins	[1.270000, 1.270000, 1.270000, 1.270000]
+	TiledPageScale		1
+	ShowPageBoundaries	off
 	ZoomFactor		"100"
 	Block {
 	  BlockType		  Inport
@@ -2541,6 +1876,8 @@ Model {
 	  Position		  [805, 233, 835, 247]
 	  Orientation		  "left"
 	  IconDisplay		  "Port number"
+	  OutDataType		  "sfix(16)"
+	  OutScaling		  "2^0"
 	}
 	Block {
 	  BlockType		  Inport
@@ -2549,6 +1886,8 @@ Model {
 	  Orientation		  "left"
 	  Port			  "2"
 	  IconDisplay		  "Port number"
+	  OutDataType		  "sfix(16)"
+	  OutScaling		  "2^0"
 	}
 	Block {
 	  BlockType		  Inport
@@ -2557,10 +1896,13 @@ Model {
 	  Orientation		  "left"
 	  Port			  "3"
 	  IconDisplay		  "Port number"
+	  OutDataType		  "sfix(16)"
+	  OutScaling		  "2^0"
 	}
 	Block {
 	  BlockType		  MATLABFcn
 	  Name			  "DYNAMICS"
+	  Ports			  [1, 1]
 	  Position		  [420, 285, 480, 315]
 	  Orientation		  "left"
 	  MATLABFcn		  "dinamica"
@@ -2582,7 +1924,8 @@ Model {
 	  Position		  [295, 293, 325, 307]
 	  Orientation		  "left"
 	  IconDisplay		  "Port number"
-	  BusOutputAsStruct	  off
+	  OutDataType		  "sfix(16)"
+	  OutScaling		  "2^0"
 	}
 	Line {
 	  SrcBlock		  "DYNAMICS"
@@ -2637,10 +1980,9 @@ Model {
       OpenFcn		      "optsiminit"
       FontName		      "Arial"
       FontWeight	      "bold"
-      TreatAsAtomicUnit	      off
       MinAlgLoopOccurrences   off
       RTWSystemCode	      "Auto"
-      MaskHideContents	      off
+      FunctionWithSeparateData off
       MaskDisplay	      "disp('optsiminit')"
       MaskIconFrame	      on
       MaskIconOpaque	      on
@@ -2657,26 +1999,26 @@ Model {
 	PaperPositionMode	"auto"
 	PaperType		"A4"
 	PaperUnits		"centimeters"
+	TiledPaperMargins	[1.270000, 1.270000, 1.270000, 1.270000]
+	TiledPageScale		1
+	ShowPageBoundaries	off
 	ZoomFactor		"100"
       }
     }
     Block {
       BlockType		      SubSystem
-      Name		      "FILTERED DATA SCOPES\nAttitude [rad]\nAng. rate"
-"s [rad/sec]\nposition [m]\nPos. rates [m/s]1"
+      Name		      "FILTERED DATA SCOPES\nAttitude [rad]\nAng. rates [rad/sec]\nposition [m]\nPos. rates [m/s]1"
       Ports		      [1]
-      Position		      [809, 85, 871, 125]
+      Position		      [849, 85, 911, 125]
       Orientation	      "up"
       BackgroundColor	      "green"
-      TreatAsAtomicUnit	      off
       MinAlgLoopOccurrences   off
       RTWSystemCode	      "Auto"
-      MaskHideContents	      off
+      FunctionWithSeparateData off
       System {
-	Name			"FILTERED DATA SCOPES\nAttitude [rad]\nAng. ra"
-"tes [rad/sec]\nposition [m]\nPos. rates [m/s]1"
-	Location		[982, 130, 1998, 792]
-	Open			off
+	Name			"FILTERED DATA SCOPES\nAttitude [rad]\nAng. rates [rad/sec]\nposition [m]\nPos. rates [m/s]1"
+	Location		[26, 259, 1042, 921]
+	Open			on
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
 	ScreenColor		"white"
@@ -2684,12 +2026,17 @@ Model {
 	PaperPositionMode	"auto"
 	PaperType		"A4"
 	PaperUnits		"centimeters"
+	TiledPaperMargins	[1.270000, 1.270000, 1.270000, 1.270000]
+	TiledPageScale		1
+	ShowPageBoundaries	off
 	ZoomFactor		"100"
 	Block {
 	  BlockType		  Inport
 	  Name			  "In1"
 	  Position		  [120, 353, 150, 367]
 	  IconDisplay		  "Port number"
+	  OutDataType		  "sfix(16)"
+	  OutScaling		  "2^0"
 	}
 	Block {
 	  BlockType		  Demux
@@ -2935,7 +2282,7 @@ Model {
 	  Position		  [760, 359, 790, 391]
 	  Floating		  off
 	  Location		  [681, 54, 1014, 362]
-	  Open			  on
+	  Open			  off
 	  NumInputPorts		  "1"
 	  List {
 	    ListType		    AxesTitles
@@ -2956,7 +2303,7 @@ Model {
 	  Position		  [535, 429, 565, 461]
 	  Floating		  off
 	  Location		  [686, 454, 1019, 762]
-	  Open			  on
+	  Open			  off
 	  NumInputPorts		  "1"
 	  List {
 	    ListType		    AxesTitles
@@ -2977,7 +2324,7 @@ Model {
 	  Position		  [535, 499, 565, 531]
 	  Floating		  off
 	  Location		  [686, 452, 1019, 760]
-	  Open			  on
+	  Open			  off
 	  NumInputPorts		  "1"
 	  List {
 	    ListType		    AxesTitles
@@ -3146,21 +2493,18 @@ Model {
     }
     Block {
       BlockType		      SubSystem
-      Name		      "INITIAL CONDITIONS\nAttitude [rad]\nAng. rates "
-"[rad/sec]\nposition [m]\nPos. rates [m/s]\n"
+      Name		      "INITIAL CONDITIONS\nAttitude [rad]\nAng. rates [rad/sec]\nposition [m]\nPos. rates [m/s]\n"
       Ports		      [0, 1]
       Position		      [74, 80, 136, 120]
       Orientation	      "down"
       BackgroundColor	      "darkGreen"
-      TreatAsAtomicUnit	      off
       MinAlgLoopOccurrences   off
       RTWSystemCode	      "Auto"
-      MaskHideContents	      off
+      FunctionWithSeparateData off
       System {
-	Name			"INITIAL CONDITIONS\nAttitude [rad]\nAng. rate"
-"s [rad/sec]\nposition [m]\nPos. rates [m/s]\n"
+	Name			"INITIAL CONDITIONS\nAttitude [rad]\nAng. rates [rad/sec]\nposition [m]\nPos. rates [m/s]\n"
 	Location		[2, 82, 1022, 722]
-	Open			on
+	Open			off
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
 	ScreenColor		"white"
@@ -3168,6 +2512,9 @@ Model {
 	PaperPositionMode	"auto"
 	PaperType		"A4"
 	PaperUnits		"centimeters"
+	TiledPaperMargins	[1.270000, 1.270000, 1.270000, 1.270000]
+	TiledPageScale		1
+	ShowPageBoundaries	off
 	ZoomFactor		"100"
 	Block {
 	  BlockType		  Mux
@@ -3183,78 +2530,103 @@ Model {
 	  Name			  "dot pitch [rad/s]"
 	  Position		  [130, 175, 160, 205]
 	  Value			  "0.5"
+	  OutDataType		  "sfix(16)"
+	  OutScaling		  "2^0"
 	}
 	Block {
 	  BlockType		  Constant
 	  Name			  "dot roll [rad/s]"
 	  Position		  [130, 75, 160, 105]
 	  Value			  "0.5"
+	  OutDataType		  "sfix(16)"
+	  OutScaling		  "2^0"
 	}
 	Block {
 	  BlockType		  Constant
 	  Name			  "dot x [m/s]"
 	  Position		  [130, 485, 160, 515]
 	  Value			  "0"
+	  OutDataType		  "sfix(16)"
+	  OutScaling		  "2^0"
 	}
 	Block {
 	  BlockType		  Constant
 	  Name			  "dot y [m/s]"
 	  Position		  [130, 590, 160, 620]
 	  Value			  "0"
+	  OutDataType		  "sfix(16)"
+	  OutScaling		  "2^0"
 	}
 	Block {
 	  BlockType		  Constant
 	  Name			  "dot yaw [rad/s]"
 	  Position		  [130, 280, 160, 310]
 	  Value			  "0"
+	  OutDataType		  "sfix(16)"
+	  OutScaling		  "2^0"
 	}
 	Block {
 	  BlockType		  Constant
 	  Name			  "dot z  [m/s]"
 	  Position		  [130, 380, 160, 410]
 	  Value			  "0"
+	  OutDataType		  "sfix(16)"
+	  OutScaling		  "2^0"
 	}
 	Block {
 	  BlockType		  Constant
 	  Name			  "pitch [rad]"
 	  Position		  [130, 125, 160, 155]
 	  Value			  "0.5"
+	  OutDataType		  "sfix(16)"
+	  OutScaling		  "2^0"
 	}
 	Block {
 	  BlockType		  Constant
 	  Name			  "roll [rad]"
 	  Position		  [130, 25, 160, 55]
 	  Value			  "0.5"
+	  OutDataType		  "sfix(16)"
+	  OutScaling		  "2^0"
 	}
 	Block {
 	  BlockType		  Constant
 	  Name			  "x [m]"
 	  Position		  [130, 435, 160, 465]
 	  Value			  "0"
+	  OutDataType		  "sfix(16)"
+	  OutScaling		  "2^0"
 	}
 	Block {
 	  BlockType		  Constant
 	  Name			  "y [m]"
 	  Position		  [130, 535, 160, 565]
 	  Value			  "0"
+	  OutDataType		  "sfix(16)"
+	  OutScaling		  "2^0"
 	}
 	Block {
 	  BlockType		  Constant
 	  Name			  "yaw [rad]"
 	  Position		  [130, 230, 160, 260]
 	  Value			  "0"
+	  OutDataType		  "sfix(16)"
+	  OutScaling		  "2^0"
 	}
 	Block {
 	  BlockType		  Constant
 	  Name			  "z [m]"
 	  Position		  [130, 330, 160, 360]
+	  OutDataType		  "sfix(16)"
+	  OutScaling		  "2^0"
 	}
 	Block {
 	  BlockType		  Outport
 	  Name			  "Out1"
 	  Position		  [585, 298, 615, 312]
 	  IconDisplay		  "Port number"
-	  BusOutputAsStruct	  off
+	  OutDataType		  "sfix(16)"
+	  OutScaling		  "2^0"
 	}
 	Line {
 	  SrcBlock		  "roll [rad]"
@@ -3348,22 +2720,18 @@ Model {
 	Annotation {
 	  Name			  "x1"
 	  Position		  [114, 36]
-	  UseDisplayTextAsClickCallback	off
 	}
 	Annotation {
 	  Name			  "x12"
 	  Position		  [116, 607]
-	  UseDisplayTextAsClickCallback	off
 	}
 	Annotation {
 	  Name			  "x10"
 	  Position		  [104, 502]
-	  UseDisplayTextAsClickCallback	off
 	}
 	Annotation {
 	  Name			  "x8"
 	  Position		  [109, 390]
-	  UseDisplayTextAsClickCallback	off
 	}
       }
     }
@@ -3373,19 +2741,17 @@ Model {
       Ports		      [2, 1]
       Position		      [185, 172, 215, 203]
       InitialConditionSource  "external"
-      IgnoreLimit	      off
     }
     Block {
       BlockType		      SubSystem
       Name		      "MOTORS+MODULES"
       Ports		      [1, 1]
-      Position		      [550, 289, 610, 381]
+      Position		      [520, 289, 580, 381]
       Orientation	      "left"
       BackgroundColor	      "orange"
-      TreatAsAtomicUnit	      off
       MinAlgLoopOccurrences   off
       RTWSystemCode	      "Auto"
-      MaskHideContents	      off
+      FunctionWithSeparateData off
       System {
 	Name			"MOTORS+MODULES"
 	Location		[0, 88, 1022, 736]
@@ -3397,6 +2763,9 @@ Model {
 	PaperPositionMode	"auto"
 	PaperType		"A4"
 	PaperUnits		"centimeters"
+	TiledPaperMargins	[1.270000, 1.270000, 1.270000, 1.270000]
+	TiledPageScale		1
+	ShowPageBoundaries	off
 	ZoomFactor		"100"
 	Block {
 	  BlockType		  Inport
@@ -3404,10 +2773,13 @@ Model {
 	  Position		  [795, 288, 825, 302]
 	  Orientation		  "left"
 	  IconDisplay		  "Port number"
+	  OutDataType		  "sfix(16)"
+	  OutScaling		  "2^0"
 	}
 	Block {
 	  BlockType		  MATLABFcn
 	  Name			  "Bin2Om"
+	  Ports			  [1, 1]
 	  Position		  [310, 280, 370, 310]
 	  Orientation		  "left"
 	  MATLABFcn		  "bin2Om"
@@ -3420,10 +2792,9 @@ Model {
 	  Ports			  [1, 1]
 	  Position		  [470, 274, 550, 316]
 	  Orientation		  "left"
-	  TreatAsAtomicUnit	  off
 	  MinAlgLoopOccurrences	  off
 	  RTWSystemCode		  "Auto"
-	  MaskHideContents	  off
+	  FunctionWithSeparateData off
 	  System {
 	    Name		    "MOTOR\nDYNAMICS"
 	    Location		    [958, 122, 1970, 762]
@@ -3435,6 +2806,9 @@ Model {
 	    PaperPositionMode	    "auto"
 	    PaperType		    "A4"
 	    PaperUnits		    "centimeters"
+	    TiledPaperMargins	    [1.270000, 1.270000, 1.270000, 1.270000]
+	    TiledPageScale	    1
+	    ShowPageBoundaries	    off
 	    ZoomFactor		    "100"
 	    Block {
 	      BlockType		      Inport
@@ -3442,6 +2816,8 @@ Model {
 	      Position		      [790, 298, 820, 312]
 	      Orientation	      "left"
 	      IconDisplay	      "Port number"
+	      OutDataType	      "sfix(16)"
+	      OutScaling	      "2^0"
 	    }
 	    Block {
 	      BlockType		      Demux
@@ -3527,7 +2903,8 @@ Model {
 	      Position		      [245, 298, 275, 312]
 	      Orientation	      "left"
 	      IconDisplay	      "Port number"
-	      BusOutputAsStruct	      off
+	      OutDataType	      "sfix(16)"
+	      OutScaling	      "2^0"
 	    }
 	    Line {
 	      SrcBlock		      "In1"
@@ -3616,10 +2993,8 @@ Model {
 	      DstPort		      1
 	    }
 	    Annotation {
-	      Name		      "Delays due to control output sequence\n"
-"2E-4 s each @ 115200 bps"
+	      Name		      "Delays due to control output sequence\n2E-4 s each @ 115200 bps"
 	      Position		      [424, 460]
-	      UseDisplayTextAsClickCallback off
 	    }
 	  }
 	}
@@ -3634,6 +3009,7 @@ Model {
 	Block {
 	  BlockType		  MATLABFcn
 	  Name			  "U2bin"
+	  Ports			  [1, 1]
 	  Position		  [690, 280, 750, 310]
 	  Orientation		  "left"
 	  MATLABFcn		  "U2bin"
@@ -3646,7 +3022,8 @@ Model {
 	  Position		  [210, 288, 240, 302]
 	  Orientation		  "left"
 	  IconDisplay		  "Port number"
-	  BusOutputAsStruct	  off
+	  OutDataType		  "sfix(16)"
+	  OutScaling		  "2^0"
 	}
 	Line {
 	  SrcBlock		  "Bin2Om"
@@ -3685,10 +3062,9 @@ Model {
       Name		      "Miscelaneous SCOPES"
       Ports		      [1]
       Position		      [200, 449, 300, 491]
-      TreatAsAtomicUnit	      off
       MinAlgLoopOccurrences   off
       RTWSystemCode	      "Auto"
-      MaskHideContents	      off
+      FunctionWithSeparateData off
       System {
 	Name			"Miscelaneous SCOPES"
 	Location		[89, 82, 935, 736]
@@ -3700,6 +3076,9 @@ Model {
 	PaperPositionMode	"auto"
 	PaperType		"A4"
 	PaperUnits		"centimeters"
+	TiledPaperMargins	[1.270000, 1.270000, 1.270000, 1.270000]
+	TiledPageScale		1
+	ShowPageBoundaries	off
 	ZoomFactor		"100"
 	Block {
 	  BlockType		  Inport
@@ -3707,6 +3086,8 @@ Model {
 	  Position		  [160, 343, 190, 357]
 	  IconDisplay		  "Port number"
 	  PortDimensions	  "6"
+	  OutDataType		  "sfix(16)"
+	  OutScaling		  "2^0"
 	}
 	Block {
 	  BlockType		  Demux
@@ -3897,10 +3278,9 @@ Model {
       Name		      "PROP. ANG SPEEDS SCOPES"
       Ports		      [1]
       Position		      [475, 443, 560, 487]
-      TreatAsAtomicUnit	      off
       MinAlgLoopOccurrences   off
       RTWSystemCode	      "Auto"
-      MaskHideContents	      off
+      FunctionWithSeparateData off
       System {
 	Name			"PROP. ANG SPEEDS SCOPES"
 	Location		[2, 82, 1017, 722]
@@ -3912,12 +3292,17 @@ Model {
 	PaperPositionMode	"auto"
 	PaperType		"A4"
 	PaperUnits		"centimeters"
+	TiledPaperMargins	[1.270000, 1.270000, 1.270000, 1.270000]
+	TiledPageScale		1
+	ShowPageBoundaries	off
 	ZoomFactor		"100"
 	Block {
 	  BlockType		  Inport
 	  Name			  "In1"
 	  Position		  [305, 293, 335, 307]
 	  IconDisplay		  "Port number"
+	  OutDataType		  "sfix(16)"
+	  OutScaling		  "2^0"
 	}
 	Block {
 	  BlockType		  Demux
@@ -4042,19 +3427,16 @@ Model {
     }
     Block {
       BlockType		      SubSystem
-      Name		      "SCOPES\nAttitude [rad]\nAng. rates [rad/sec]\np"
-"osition [m]\nPos. rates [m/s]"
+      Name		      "SCOPES\nAttitude [rad]\nAng. rates [rad/sec]\nposition [m]\nPos. rates [m/s]"
       Ports		      [1]
       Position		      [364, 85, 426, 125]
       Orientation	      "up"
       BackgroundColor	      "green"
-      TreatAsAtomicUnit	      off
       MinAlgLoopOccurrences   off
       RTWSystemCode	      "Auto"
-      MaskHideContents	      off
+      FunctionWithSeparateData off
       System {
-	Name			"SCOPES\nAttitude [rad]\nAng. rates [rad/sec]"
-"\nposition [m]\nPos. rates [m/s]"
+	Name			"SCOPES\nAttitude [rad]\nAng. rates [rad/sec]\nposition [m]\nPos. rates [m/s]"
 	Location		[-34, 82, 982, 744]
 	Open			off
 	ModelBrowserVisibility	off
@@ -4064,12 +3446,17 @@ Model {
 	PaperPositionMode	"auto"
 	PaperType		"A4"
 	PaperUnits		"centimeters"
+	TiledPaperMargins	[1.270000, 1.270000, 1.270000, 1.270000]
+	TiledPageScale		1
+	ShowPageBoundaries	off
 	ZoomFactor		"100"
 	Block {
 	  BlockType		  Inport
 	  Name			  "In1"
 	  Position		  [225, 353, 255, 367]
 	  IconDisplay		  "Port number"
+	  OutDataType		  "sfix(16)"
+	  OutScaling		  "2^0"
 	}
 	Block {
 	  BlockType		  Demux
@@ -4096,7 +3483,7 @@ Model {
 	  Position		  [750, 219, 780, 251]
 	  Floating		  off
 	  Location		  [346, 428, 674, 731]
-	  Open			  on
+	  Open			  off
 	  NumInputPorts		  "1"
 	  List {
 	    ListType		    AxesTitles
@@ -4146,7 +3533,7 @@ Model {
 	  Position		  [750, 149, 780, 181]
 	  Floating		  off
 	  Location		  [7, 422, 337, 732]
-	  Open			  on
+	  Open			  off
 	  NumInputPorts		  "1"
 	  List {
 	    ListType		    AxesTitles
@@ -4278,7 +3665,7 @@ Model {
 	  Position		  [750, 289, 780, 321]
 	  Floating		  off
 	  Location		  [681, 422, 1018, 731]
-	  Open			  on
+	  Open			  off
 	  NumInputPorts		  "1"
 	  List {
 	    ListType		    AxesTitles
@@ -4522,39 +3909,119 @@ Model {
       SaveFormat	      "Array"
     }
     Block {
-      BlockType		      Constant
-      Name		      "Yawd [rad]"
-      Position		      [915, 465, 945, 495]
+      BlockType		      SubSystem
+      Name		      "UDP Parse\nAttitude [rad]\nAng. rates [rad/sec]"
+      Ports		      [1, 1]
+      Position		      [870, 304, 910, 366]
       Orientation	      "left"
-      ForegroundColor	      "red"
-      DropShadow	      on
-      Value		      "0"
-    }
-    Block {
-      BlockType		      Constant
-      Name		      "Zd [m]"
-      Position		      [915, 405, 945, 435]
-      Orientation	      "left"
-      ForegroundColor	      "red"
-      DropShadow	      on
-    }
-    Block {
-      BlockType		      Constant
-      Name		      "dotXd [m/s]"
-      Position		      [915, 300, 945, 330]
-      Orientation	      "left"
-      ForegroundColor	      "red"
-      DropShadow	      on
-      Value		      "0"
-    }
-    Block {
-      BlockType		      Constant
-      Name		      "dotYd [m/s]"
-      Position		      [915, 355, 945, 385]
-      Orientation	      "left"
-      ForegroundColor	      "red"
-      DropShadow	      on
-      Value		      "0"
+      BackgroundColor	      "green"
+      NamePlacement	      "alternate"
+      MinAlgLoopOccurrences   off
+      RTWSystemCode	      "Auto"
+      FunctionWithSeparateData off
+      System {
+	Name			"UDP Parse\nAttitude [rad]\nAng. rates [rad/sec]"
+	Location		[26, 259, 1042, 921]
+	Open			off
+	ModelBrowserVisibility	off
+	ModelBrowserWidth	200
+	ScreenColor		"white"
+	PaperOrientation	"landscape"
+	PaperPositionMode	"auto"
+	PaperType		"usletter"
+	PaperUnits		"inches"
+	TiledPaperMargins	[0.500000, 0.500000, 0.500000, 0.500000]
+	TiledPageScale		1
+	ShowPageBoundaries	off
+	ZoomFactor		"100"
+	Block {
+	  BlockType		  Inport
+	  Name			  "In1"
+	  Position		  [85, 343, 115, 357]
+	  IconDisplay		  "Port number"
+	  OutDataType		  "sfix(16)"
+	  OutScaling		  "2^0"
+	}
+	Block {
+	  BlockType		  Demux
+	  Name			  "Demux"
+	  Ports			  [1, 12]
+	  Position		  [210, 128, 220, 567]
+	  BackgroundColor	  "black"
+	  ShowName		  off
+	  Outputs		  "12"
+	}
+	Block {
+	  BlockType		  Mux
+	  Name			  "Mux"
+	  Ports			  [6, 1]
+	  Position		  [795, 123, 805, 562]
+	  ShowName		  off
+	  Inputs		  "6"
+	  DisplayOption		  "bar"
+	}
+	Block {
+	  BlockType		  Outport
+	  Name			  "Out1"
+	  Position		  [895, 338, 925, 352]
+	  IconDisplay		  "Port number"
+	  OutDataType		  "sfix(16)"
+	  OutScaling		  "2^0"
+	}
+	Line {
+	  SrcBlock		  "Demux"
+	  SrcPort		  1
+	  DstBlock		  "Mux"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Demux"
+	  SrcPort		  3
+	  Points		  [275, 0; 0, 5]
+	  DstBlock		  "Mux"
+	  DstPort		  2
+	}
+	Line {
+	  SrcBlock		  "Demux"
+	  SrcPort		  5
+	  Points		  [275, 0; 0, 10]
+	  DstBlock		  "Mux"
+	  DstPort		  3
+	}
+	Line {
+	  SrcBlock		  "Demux"
+	  SrcPort		  2
+	  Points		  [210, 0; 0, 190]
+	  DstBlock		  "Mux"
+	  DstPort		  4
+	}
+	Line {
+	  SrcBlock		  "Demux"
+	  SrcPort		  4
+	  Points		  [170, 0; 0, 195]
+	  DstBlock		  "Mux"
+	  DstPort		  5
+	}
+	Line {
+	  SrcBlock		  "Demux"
+	  SrcPort		  6
+	  Points		  [130, 0; 0, 200]
+	  DstBlock		  "Mux"
+	  DstPort		  6
+	}
+	Line {
+	  SrcBlock		  "In1"
+	  SrcPort		  1
+	  DstBlock		  "Demux"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Mux"
+	  SrcPort		  1
+	  DstBlock		  "Out1"
+	  DstPort		  1
+	}
+      }
     }
     Line {
       SrcBlock		      "Integrator"
@@ -4580,15 +4047,13 @@ Model {
 	  }
 	}
 	Branch {
-	  DstBlock		  "SCOPES\nAttitude [rad]\nAng. rates [rad/sec"
-"]\nposition [m]\nPos. rates [m/s]"
+	  DstBlock		  "SCOPES\nAttitude [rad]\nAng. rates [rad/sec]\nposition [m]\nPos. rates [m/s]"
 	  DstPort		  1
 	}
       }
     }
     Line {
-      SrcBlock		      "INITIAL CONDITIONS\nAttitude [rad]\nAng. rates "
-"[rad/sec]\nposition [m]\nPos. rates [m/s]\n"
+      SrcBlock		      "INITIAL CONDITIONS\nAttitude [rad]\nAng. rates [rad/sec]\nposition [m]\nPos. rates [m/s]\n"
       SrcPort		      1
       Points		      [0, 70]
       DstBlock		      "Integrator"
@@ -4621,49 +4086,9 @@ Model {
       DstPort		      1
     }
     Line {
-      SrcBlock		      "CONTROL"
-      SrcPort		      1
-      Points		      [-40, 0]
-      Branch {
-	DstBlock		"MOTORS+MODULES"
-	DstPort			1
-      }
-      Branch {
-	DstBlock		"CONTROL VECTOR U"
-	DstPort			1
-      }
-    }
-    Line {
-      SrcBlock		      "dotXd [m/s]"
-      SrcPort		      1
-      DstBlock		      "CONTROL"
-      DstPort		      2
-    }
-    Line {
-      SrcBlock		      "dotYd [m/s]"
-      SrcPort		      1
-      Points		      [-60, 0; 0, -35]
-      DstBlock		      "CONTROL"
-      DstPort		      3
-    }
-    Line {
-      SrcBlock		      "Zd [m]"
-      SrcPort		      1
-      Points		      [-75, 0; 0, -65]
-      DstBlock		      "CONTROL"
-      DstPort		      4
-    }
-    Line {
-      SrcBlock		      "Yawd [rad]"
-      SrcPort		      1
-      Points		      [-105, 0; 0, -105]
-      DstBlock		      "CONTROL"
-      DstPort		      5
-    }
-    Line {
       SrcBlock		      "MOTORS+MODULES"
       SrcPort		      1
-      Points		      [0, 0; -100, 0]
+      Points		      [-70, 0]
       Branch {
 	DstBlock		"AERO"
 	DstPort			2
@@ -4691,50 +4116,45 @@ Model {
     Line {
       SrcBlock		      "DELAY - NOISE - FILTER"
       SrcPort		      1
-      Points		      [30, 0]
+      Points		      [175, 0]
       Branch {
-	Points			[0, 105]
-	DstBlock		"CONTROL"
+	Points			[-70, 0]
+	DstBlock		"FILTERED DATA SCOPES\nAttitude [rad]\nAng. rates [rad/sec]\nposition [m]\nPos. rates [m/s]1"
 	DstPort			1
       }
       Branch {
-	Points			[35, 0]
-	DstBlock		"FILTERED DATA SCOPES\nAttitude [rad]\nAng. ra"
-"tes [rad/sec]\nposition [m]\nPos. rates [m/s]1"
+	Points			[0, 145]
+	DstBlock		"UDP Parse\nAttitude [rad]\nAng. rates [rad/sec]"
 	DstPort			1
       }
     }
     Annotation {
-      Name		      "HOW TO OPERATE\n1- Double click on optiminit bl"
-"ock\n2- Run the simulation"
+      Name		      "HOW TO OPERATE\n1- Double click on optiminit block\n2- Run the simulation"
       Position		      [88, 572]
-      UseDisplayTextAsClickCallback off
     }
   }
 }
-
 # Finite State Machines
 #
-#    Stateflow Version 6.2 (R14SP2) dated Aug  4 2005, 10:13:39
+#    Stateflow Version 6.7 (R2007b) dated Aug  7 2007, 16:48:14
 #
 #
+
 
 Stateflow {
-
-	machine {
-		id                   		1
-		name                 		"systema"
-		created              		"13-Oct-2005 10:30:46"
-		isLibrary            		0
-		firstTarget          		2
-		sfVersion            		62014000
-	}
-
-	target {
-		id                        		2
-		name                      		"sfun"
-		description               		"Default Simulink S-Function Target."
-		machine                   		1
-		linkNode                  		[1 0 0]
-	}
+  machine {
+    id			    1
+    name		    "systema"
+    created		    "13-Oct-2005 10:30:46"
+    isLibrary		    0
+    firstTarget		    2
+    sfVersion		    67014000.000001
+  }
+  target {
+    id			    2
+    name		    "sfun"
+    description		    "Default Simulink S-Function Target."
+    machine		    1
+    linkNode		    [1 0 0]
+  }
 }

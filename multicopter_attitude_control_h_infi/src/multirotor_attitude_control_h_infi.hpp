@@ -55,6 +55,7 @@ typedef vmml::vector<3,float> Vector;
 
 using namespace vmml;
 
+// TODO: scale the integral to timestep
 class Multirotor_Attitude_Control_H_Infi{ //__EXPORT
 public:
 	Multirotor_Attitude_Control_H_Infi();
