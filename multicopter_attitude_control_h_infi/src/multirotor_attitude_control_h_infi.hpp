@@ -74,7 +74,7 @@ public:
 		_Iyy = Iyy;
 		_Izz = Izz;
 	};
-	void control(const State& meas_state, const State& meas_rate, State& torque_out);
+	bool control(const State& meas_state, const State& meas_rate, State& torque_out);
 
 	void reset_integrator();
 

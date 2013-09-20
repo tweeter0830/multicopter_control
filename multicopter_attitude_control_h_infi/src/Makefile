@@ -1,4 +1,4 @@
-UNAME = Linux
+UNAME = Windows
 
 ifeq ($(UNAME), Windows)
 	LIBS = -lboost_system-mt
@@ -9,19 +9,23 @@ ifeq ($(UNAME), Linux)
 	INC= -I/home/jacob/Packages/vmmlib-1.0/include/
 endif
 
-CC=g++
-CFLAGS=-c -Wall -std=gnu++11
+CXX = g++ -Wall -std=gnu++11
+CC =
 
-#Cygwin use BAHHHH
-#Ubuntu use
+EXECUTABLE = udp_sim_link
+OBJECTS = multirotor_attitude_control_h_infi.o udp_sim_link.o 
 
-all: multirotor_attitude_control_h_infi.o udp_sim_link.o
-	$(CC) multirotor_attitude_control_h_infi.o udp_sim_link.o -o udp_sim_link $(LIBS) $(INC)
+debug: CXX += -DDEBUG -g
+debug: CC += -DDEBUG -g
+debug: $(EXECUTABLE)
 
-multirotor_attitude_control_h_infi.o: multirotor_attitude_control_h_infi.cpp
-	$(CC) $(CFLAGS) $(INC) multirotor_attitude_control_h_infi.cpp
+all: $(EXECUTABLE)
 
-udp_sim_link.o: udp_sim_link.cpp
-	$(CC) $(CFLAGS) $(INC) udp_sim_link.cpp
+$(EXECUTABLE): $(OBJECTS)
+	$(CXX) -o $@ $^ $(LIBS) $(INC)
+
+%.o: %.cpp
+	$(CXX) -c $< $(INC)
+
 clean:
-	rm -rf *o udp_sim_link
+	rm -f $(EXECUTABLE) $(OBJECTS)

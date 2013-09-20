@@ -10,7 +10,18 @@ using boost::asio::ip::udp;
 
 int main(int argc, char* argv[])
 {
-	//TODO: Parse inputs
+	// TODO: Parse inputs
+	// Physical Params:
+	float Ixx = 8.0f*6.23e-3f;
+	float Iyy = 8.0f*6.23e-3f;
+	float Izz = 8.0f*1.121e-2f;
+	float moment_arm = 0.33f;
+	// Control Params:
+	float weight_deriv = 0.001f;
+	float weight_state = 0.001f;
+	float weight_int = 0.001f;
+	float weight_torque = 1.0f;
+	
 	std::string str_internal_ip = "127.0.0.1";
 	try
 	{
@@ -35,8 +46,8 @@ int main(int argc, char* argv[])
 		//socket_send.bind(endpoint_send_to);
 		// Initialize our controller
 		Multirotor_Attitude_Control_H_Infi quad_control;
-		quad_control.set_phys_params(8.0f*6.228e-3f, 8.0f*6.228e-3, 8.0f*1.121e-2f);
-		quad_control.set_weights(0.0001f,0.0001f,0.0001f,10000.0f);
+		quad_control.set_phys_params(Ixx, Iyy, Izz);
+		quad_control.set_weights(weight_state,weight_int,weight_deriv,weight_torque);
 		quad_control.set_mode(true, true, true);
 		// Set up a bunch of parameters for measurement reading and control sending
 		Multirotor_Attitude_Control_H_Infi::State meas_state, meas_rate, torque_out;
@@ -58,8 +69,8 @@ int main(int argc, char* argv[])
 			// Update the control command
 			quad_control.control(meas_state, meas_rate, torque_out);
 			// Send control to the simulation
-			send_buf[0]=torque_out.r;
-			send_buf[1]=torque_out.p;
+			send_buf[0]=torque_out.r/moment_arm;
+			send_buf[1]=torque_out.p/moment_arm;
 			send_buf[2]=torque_out.y;
 			printf( "SENT: %e %e %e\n", send_buf[0], send_buf[1], send_buf[2] );
 			socket_send.send_to(boost::asio::buffer(send_buf), endpoint_send_to);

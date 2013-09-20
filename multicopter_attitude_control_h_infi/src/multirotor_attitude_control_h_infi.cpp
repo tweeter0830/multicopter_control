@@ -9,7 +9,10 @@
 #include "multirotor_attitude_control_h_infi.hpp"
 
 //DEBUG
+#ifdef DEBUG
 #include <iostream>
+#endif
+
 typedef vmml::matrix< 3, 3, float> Matrix;
 typedef vmml::vector<3,float> Vector;
 
@@ -44,10 +47,9 @@ void Multirotor_Attitude_Control_H_Infi::set_setpoints(const State& state,const 
 	_setpoint_rate = rate;
 	_setpoint_accel = accel;
 }
-void Multirotor_Attitude_Control_H_Infi::control(const State& meas_state, const State& meas_rate, State& torque_out) {
+bool Multirotor_Attitude_Control_H_Infi::control(const State& meas_state, const State& meas_rate, State& torque_out) {
 	if(!_modes_set) {
-		std::cout << "Error, modes have not been set yet" << std::endl;
-		return;
+		return false;
 	}
 	// TODO: check inputs here
 	Vector k_p;
@@ -56,7 +58,6 @@ void Multirotor_Attitude_Control_H_Infi::control(const State& meas_state, const 
 	make_M(meas_state,_M);
 	make_C(meas_state, meas_rate, _Cor);
 	calc_gains(_M,_Cor, k_p, k_i, k_d);
-	printf("M(1,1) %e, Cor(1,1) %e, k_p(1) %e, k_i(1) %e, k_d(1) %e\n",_M(1,1),_Cor(1,1),k_p(1),k_i(1),k_d(1));
 	Vector error_state;
 	if( _state_track ){
 		error_state(0) = meas_state.r-_setpoint_state.r;
@@ -85,15 +86,24 @@ void Multirotor_Attitude_Control_H_Infi::control(const State& meas_state, const 
 	meas_rate_vect(0)=meas_state.r;
 	meas_rate_vect(1)=meas_state.p;
 	meas_rate_vect(2)=meas_state.y;
-	printf("ERate(1)  %e, EState(1) %e, int(1) %e\n",error_rate(1),error_state(1),_integral(1));
+	#ifdef DEBUG
+	std::cout << "error_state " << error_state << std::endl;
+	std::cout << "error_rate " << error_rate << std::endl;
+	std::cout << "setpoint_accel " << setpoint_accel << std::endl;
+	#endif
 	_integral = _integral + error_state;
 	// TODO: check integral limits and saturation
 	Vector control_accel = k_d*error_rate + k_p*error_state + k_i*_integral;
 	Vector control_torque = _M*setpoint_accel + _Cor*meas_rate_vect - _M*control_accel;
+	#ifdef DEBUG
+	std::cout << "_integral " << _integral << std::endl;
+	std::cout << "control_accel " << control_accel << std::endl;
+	std::cout << "control_torque "<< control_torque<< std::endl;
+	#endif
 	torque_out.r = control_torque(0);
-	printf("torque(0) %e\n",control_torque(0));
 	torque_out.p = control_torque(1);
 	torque_out.y = control_torque(2);
+	return true;
 }
 
 void Multirotor_Attitude_Control_H_Infi::reset_integrator()
@@ -104,16 +114,28 @@ void Multirotor_Attitude_Control_H_Infi::reset_integrator()
 }
 
 void Multirotor_Attitude_Control_H_Infi::calc_gains(const Matrix& M,const Matrix& C, Vector& k_p, Vector& k_i, Vector& k_d) {
+	const float w_1 = _weight_error_deriv;
+	const float w_2 = _weight_error_state;
+	const float w_3 = _weight_error_integral;
+	const float w_u = _weight_torque;
+
 	Matrix I;
 	I(0,0)=1.0f;I(1,1)=1.0f;I(2,2)=1.0f;
 	Matrix M_inv;
 	M.inverse(M_inv);
-	Matrix Dynamics_weights = M_inv*(C+I*(1.0f/_weight_torque) );
-	float long_expr = std::sqrt(_weight_error_state*_weight_error_state + 2.0f*_weight_error_deriv*_weight_error_integral)/_weight_error_state;
-
+	Matrix Dynamics_weights = M_inv*( C+I*( 1.0f/(w_u*w_u) ) );
+	float long_expr = std::sqrt(w_2*w_2 + 2.0f*w_1*w_3)/w_1;
+	
 	k_d=(I*long_expr)+Dynamics_weights;
-	k_p=I*(_weight_error_integral/_weight_error_deriv)+Dynamics_weights*long_expr;
-	k_i=Dynamics_weights*(_weight_error_integral/_weight_error_deriv);
+	k_p=I*(w_3/w_1)+Dynamics_weights*long_expr;
+	k_i=Dynamics_weights*(w_3/w_1);
+	#ifdef DEBUG
+	std::cout<< "long_expr" << long_expr << std::endl;
+	std::cout<< "Dynamics_weights " <<Dynamics_weights << std::endl;
+	std::cout<< "k_d "<< k_d << std::endl;
+	std::cout<< "k_p "<< k_p << std::endl;
+	std::cout<< "k_i "<< k_i << std::endl;
+	#endif
 }
 
 void Multirotor_Attitude_Control_H_Infi::make_M(const State& St, Matrix& M) {
@@ -135,8 +157,11 @@ void Multirotor_Attitude_Control_H_Infi::make_M(const State& St, Matrix& M) {
 	M_vals[7]=(_Iyy-_Izz)*cos_R*sin_R*cos_P;
 	M_vals[8]=_Ixx*sin_P*sin_P + _Iyy*sin_R*sin_R*cos_P*cos_P +
 		     _Izz*cos_R*cos_R*cos_P*cos_P;
-
+	
 	M.set(M_vals,M_vals+9);
+	#ifdef DEBUG
+	std::cout<< "M " << M << std::endl;
+	#endif
 }
 
 void Multirotor_Attitude_Control_H_Infi::make_C(const State& St, const State& Rate, Matrix& C) {
@@ -173,4 +198,7 @@ void Multirotor_Attitude_Control_H_Infi::make_C(const State& St, const State& Ra
 		     _Izz*Rate.p*cos_R*cos_R*cos_P*sin_P + 
 		     _Ixx*Rate.p*cos_P*sin_P;
 	C.set( C_vals, C_vals + 9 );
+	#ifdef DEBUG
+	std::cout<< "C " << C << std::endl;
+	#endif
 }
