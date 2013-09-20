@@ -1,42 +1,3 @@
- /****************************************************************************
- *
- *_C   Copyright (c) 2013 Estimation and Control Library (ECL). All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- * 3. Neither the name APL nor the names of its contributors may be
- *    used to endorse or promote products derived from this software
- *    without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
- * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- ****************************************************************************/
-
-/**
- * @file ecl_roll_controller.cpp
- * Implementation of a simple orthogonal roll PID controller.
- *
- */
-
 #include <stdint.h>
 #include <math.h>
 #include <float.h>
@@ -47,6 +8,8 @@
 
 #include "multirotor_attitude_control_h_infi.hpp"
 
+//DEBUG
+#include <iostream>
 typedef vmml::matrix< 3, 3, float> Matrix;
 typedef vmml::vector<3,float> Vector;
 
@@ -63,7 +26,7 @@ Multirotor_Attitude_Control_H_Infi::Multirotor_Attitude_Control_H_Infi() {
 	_setpoint_state = State();
 	_setpoint_rate = State();
 	_setpoint_accel = State();
-	_command_torque [3];
+	//_command_torque [3];
 	_modes_set = false;
 	_state_track = false;
 	_rate_track = false;
@@ -81,7 +44,7 @@ void Multirotor_Attitude_Control_H_Infi::set_setpoints(const State& state,const 
 	_setpoint_rate = rate;
 	_setpoint_accel = accel;
 }
-void Multirotor_Attitude_Control_H_Infi::control(const State& meas_state, const State& meas_rate, State torque_out) {
+void Multirotor_Attitude_Control_H_Infi::control(const State& meas_state, const State& meas_rate, State& torque_out) {
 	if(!_modes_set) {
 		std::cout << "Error, modes have not been set yet" << std::endl;
 		return;
@@ -91,8 +54,9 @@ void Multirotor_Attitude_Control_H_Infi::control(const State& meas_state, const 
 	Vector k_i;
 	Vector k_d;
 	make_M(meas_state,_M);
-	make_C(meas_state, meas_state, _Cor);
+	make_C(meas_state, meas_rate, _Cor);
 	calc_gains(_M,_Cor, k_p, k_i, k_d);
+	printf("M(1,1) %e, Cor(1,1) %e, k_p(1) %e, k_i(1) %e, k_d(1) %e\n",_M(1,1),_Cor(1,1),k_p(1),k_i(1),k_d(1));
 	Vector error_state;
 	if( _state_track ){
 		error_state(0) = meas_state.r-_setpoint_state.r;
@@ -121,12 +85,13 @@ void Multirotor_Attitude_Control_H_Infi::control(const State& meas_state, const 
 	meas_rate_vect(0)=meas_state.r;
 	meas_rate_vect(1)=meas_state.p;
 	meas_rate_vect(2)=meas_state.y;
-
+	printf("ERate(1)  %e, EState(1) %e, int(1) %e\n",error_rate(1),error_state(1),_integral(1));
 	_integral = _integral + error_state;
 	// TODO: check integral limits and saturation
 	Vector control_accel = k_d*error_rate + k_p*error_state + k_i*_integral;
 	Vector control_torque = _M*setpoint_accel + _Cor*meas_rate_vect - _M*control_accel;
 	torque_out.r = control_torque(0);
+	printf("torque(0) %e\n",control_torque(0));
 	torque_out.p = control_torque(1);
 	torque_out.y = control_torque(2);
 }

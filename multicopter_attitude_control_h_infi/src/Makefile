@@ -1,4 +1,4 @@
-UNAME = Windows
+UNAME = Linux
 
 ifeq ($(UNAME), Windows)
 	LIBS = -lboost_system-mt
@@ -23,5 +23,5 @@ multirotor_attitude_control_h_infi.o: multirotor_attitude_control_h_infi.cpp
 
 udp_sim_link.o: udp_sim_link.cpp
 	$(CC) $(CFLAGS) $(INC) udp_sim_link.cpp
-# clean:
-# 	rm -rf *o hello
+clean:
+	rm -rf *o udp_sim_link

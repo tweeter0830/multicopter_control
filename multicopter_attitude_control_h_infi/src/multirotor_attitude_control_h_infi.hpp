@@ -74,7 +74,7 @@ public:
 		_Iyy = Iyy;
 		_Izz = Izz;
 	};
-	void control(const State& meas_state, const State& meas_rate, State torque_out);
+	void control(const State& meas_state, const State& meas_rate, State& torque_out);
 
 	void reset_integrator();
 
@@ -87,10 +87,11 @@ public:
 			_tc = time_constant;
 		}
 	}
-	void set_weights(float w_error, float w_int, float w_deriv){
+	void set_weights(float w_error, float w_int, float w_deriv, float w_torque){
 		_weight_error_state = w_error;
 		_weight_error_integral = w_int;
 		_weight_error_deriv = w_deriv;
+		_weight_torque = w_torque;
 	}
 	void set_weight_error_deriv(float weight_in) {
 		_weight_error_deriv = weight_in;

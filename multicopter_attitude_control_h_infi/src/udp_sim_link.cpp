@@ -1,13 +1,3 @@
-//
-// client.cpp
-// ~~~~~~~~~~
-//
-// Copyright (c) 2003-2013 Christopher M. Kohlhoff (chris at kohlhoff dot com)
-//
-// Distributed under the Boost Software License, Version 1.0. (See accompanying
-// file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-//
-
 #include <chrono>
 #include <thread>
 #include <iostream>
@@ -42,23 +32,23 @@ int main(int argc, char* argv[])
 		socket_recv.open(udp::v4());
 		socket_send.open(udp::v4());
 		socket_recv.bind(endpoint_recv_from);
-		socket_send.bind(endpoint_send_to);
+		//socket_send.bind(endpoint_send_to);
 		// Initialize our controller
 		Multirotor_Attitude_Control_H_Infi quad_control;
 		quad_control.set_phys_params(8.0f*6.228e-3f, 8.0f*6.228e-3, 8.0f*1.121e-2f);
-		quad_control.set_weights(2.0f,2.0f,2.0f);
+		quad_control.set_weights(0.0001f,0.0001f,0.0001f,10000.0f);
 		quad_control.set_mode(true, true, true);
 		// Set up a bunch of parameters for measurement reading and control sending
 		Multirotor_Attitude_Control_H_Infi::State meas_state, meas_rate, torque_out;
-		boost::array<double, 6> recv_buf;
-		boost::array<float, 3> send_buf;
+		boost::array<double, 40> recv_buf;
+		boost::array<double, 3> send_buf;
 		bool sim_running = true;
 		std::cout<<"Control ready for input"<<std::endl;
 		while (sim_running) {
 			// Get state information for roll, pitch and yaw and their derivs
 			size_t len =socket_recv.receive_from(
 				boost::asio::buffer(recv_buf), endpoint_recv_from);
-			printf( "Data '%2.3f' Received\n", recv_buf[0] );
+			printf( "RECV: '%lu' %e %e %e %e %e %e\n", len, recv_buf[0],recv_buf[1],recv_buf[2],recv_buf[3],recv_buf[4],recv_buf[5] );
 			meas_state.r = recv_buf[0];
 			meas_state.p = recv_buf[1];
 			meas_state.y = recv_buf[2];
@@ -68,8 +58,11 @@ int main(int argc, char* argv[])
 			// Update the control command
 			quad_control.control(meas_state, meas_rate, torque_out);
 			// Send control to the simulation
+			send_buf[0]=torque_out.r;
+			send_buf[1]=torque_out.p;
+			send_buf[2]=torque_out.y;
+			printf( "SENT: %e %e %e\n", send_buf[0], send_buf[1], send_buf[2] );
 			socket_send.send_to(boost::asio::buffer(send_buf), endpoint_send_to);
-			printf( "Data '%2.3f' Sent\n", send_buf[0] );
 			}
 	}
 	catch (std::exception& e)
