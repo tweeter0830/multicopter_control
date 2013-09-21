@@ -26,6 +26,7 @@ Multirotor_Attitude_Control_H_Infi::Multirotor_Attitude_Control_H_Infi() {
 	_Ixx =1;
 	_Iyy =1;
 	_Izz =1;
+	_old_time = 0;
 	_setpoint_state = State();
 	_setpoint_rate = State();
 	_setpoint_accel = State();
@@ -49,11 +50,12 @@ void Multirotor_Attitude_Control_H_Infi::set_setpoints(const State& state,const 
 	_setpoint_rate = rate;
 	_setpoint_accel = accel;
 }
-bool Multirotor_Attitude_Control_H_Infi::control(const State& meas_state, const State& meas_rate, State& torque_out) {
+bool Multirotor_Attitude_Control_H_Infi::control(const State& meas_state, const State& meas_rate, State& torque_out, double time) {
 	if(!_modes_set) {
 		return false;
 	}
 	// TODO: check inputs here
+	float dt = time-_old_time;
 	Vector k_p;
 	Vector k_i;
 	Vector k_d;
@@ -93,11 +95,12 @@ bool Multirotor_Attitude_Control_H_Infi::control(const State& meas_state, const 
 	std::cout << "error_rate " << error_rate << std::endl;
 	std::cout << "setpoint_accel " << setpoint_accel << std::endl;
 	#endif
-	_integral = _integral + error_state;
+	_integral = _integral + error_state*dt;
 	// TODO: check integral limits and saturation
 	Vector control_accel = k_d*error_rate + k_p*error_state + k_i*_integral;
 	Vector control_torque = _M*setpoint_accel + _Cor*meas_rate_vect - _M*control_accel;
 	#ifdef DEBUG
+	std::cout << "Time Diff: " << dt << std::endl;
 	std::cout << "_integral " << _integral << std::endl;
 	std::cout << "control_accel " << control_accel << std::endl;
 	std::cout << "control_torque "<< control_torque<< std::endl;
@@ -105,6 +108,7 @@ bool Multirotor_Attitude_Control_H_Infi::control(const State& meas_state, const 
 	torque_out.r = control_torque(0);
 	torque_out.p = control_torque(1);
 	torque_out.y = control_torque(2);
+	_old_time = time;
 	return true;
 }
 

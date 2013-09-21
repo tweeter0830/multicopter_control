@@ -74,7 +74,7 @@ public:
 		_Iyy = Iyy;
 		_Izz = Izz;
 	};
-	bool control(const State& meas_state, const State& meas_rate, State& torque_out);
+	bool control(const State& meas_state, const State& meas_rate, State& torque_out, double time);
 
 	void reset_integrator();
 
@@ -140,7 +140,8 @@ private:
 	Matrix _M;
 	Matrix _M_inv;
 	Matrix _Cor;
-	
+	double _old_time;
+
 	void calc_gains(const Matrix& M,const Matrix& C, Vector& k_p, Vector& k_i, Vector& k_d);
 	void make_M(const State& St, Matrix& M);
 	void make_C(const State& St, const State& Rate, Matrix& C);

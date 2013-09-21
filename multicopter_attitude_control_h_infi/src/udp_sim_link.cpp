@@ -12,17 +12,18 @@ int main(int argc, char* argv[])
 {
 	// TODO: Parse inputs
 	// Physical Params:
-	float Ixx = 8.0f*6.23e-3f;
-	float Iyy = 8.0f*6.23e-3f;
-	float Izz = 8.0f*1.121e-2f;
-	float moment_arm = 0.33f;
+	float Ixx = 6.23e-3f;
+	float Iyy = 6.23e-3f;
+	float Izz = 1.121e-2f;
+	float moment_arm = 0.232f;
 	// Control Params:
-	float weight_deriv = 0.001f;
-	float weight_state = 0.001f;
-	float weight_int = 0.001f;
-	float weight_torque = 1.0e5f;
-	
+	float weight_deriv = 0.1f;
+	float weight_state = 0.1f;
+	float weight_int = 0.1f;
+	float weight_torque = 1.0e2f;
+	//Simulation Params
 	std::string str_internal_ip = "127.0.0.1";
+	double time = 0;
 	try
 	{
 		// if (argc != 2)
@@ -66,8 +67,9 @@ int main(int argc, char* argv[])
 			meas_rate.r = recv_buf[3];
 			meas_rate.p = recv_buf[4];
 			meas_rate.y = recv_buf[5];
+			time = recv_buf[6];
 			// Update the control command
-			quad_control.control(meas_state, meas_rate, torque_out);
+			quad_control.control(meas_state, meas_rate, torque_out, time);
 			// Send control to the simulation
 			send_buf[0]=torque_out.r/moment_arm;
 			send_buf[1]=torque_out.p/moment_arm;
