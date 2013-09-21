@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.25"
+    ComputedModelVersion    "1.60"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -25,9 +25,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "jacob"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Tue Sep 17 00:00:30 2013"
-  RTWModifiedTimeStamp	  301272011
-  ModelVersionFormat	  "1.%<AutoIncrement:25>"
+  LastModifiedDate	  "Thu Sep 19 20:58:13 2013"
+  RTWModifiedTimeStamp	  301525089
+  ModelVersionFormat	  "1.%<AutoIncrement:60>"
   ConfigurationManager	  "None"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -112,7 +112,7 @@ Model {
 	  StartTime		  "0.0"
 	  StopTime		  "10"
 	  AbsTol		  "auto"
-	  FixedStep		  "auto"
+	  FixedStep		  "1"
 	  InitialStep		  "auto"
 	  MaxNumMinSteps	  "-1"
 	  MaxOrder		  5
@@ -121,13 +121,13 @@ Model {
 	  MaxConsecutiveZCs	  "1000"
 	  ExtrapolationOrder	  4
 	  NumberNewtonIterations  1
-	  MaxStep		  "auto"
+	  MaxStep		  ".1"
 	  MinStep		  "auto"
 	  MaxConsecutiveMinStep	  "1"
 	  RelTol		  "1e-3"
 	  SolverMode		  "Auto"
-	  Solver		  "ode45"
-	  SolverName		  "ode45"
+	  Solver		  "FixedStepDiscrete"
+	  SolverName		  "FixedStepDiscrete"
 	  ShapePreserveControl	  "DisableAll"
 	  ZeroCrossControl	  "UseLocalSettings"
 	  ZeroCrossAlgorithm	  "Nonadaptive"
@@ -546,7 +546,7 @@ Model {
       }
       Name		      "Configuration"
       CurrentDlgPage	      "Solver"
-      ConfigPrmDlgPosition    " [ 506, 225, 1418, 927 ] "
+      ConfigPrmDlgPosition    " [ 485, 225, 1445, 1035 ] "
     }
     PropName		    "ConfigurationSets"
   }
@@ -622,7 +622,7 @@ Model {
   }
   System {
     Name		    "udp_test"
-    Location		    [70, 200, 650, 460]
+    Location		    [540, 321, 1120, 581]
     Open		    on
     ModelBrowserVisibility  off
     ModelBrowserWidth	    200
@@ -636,26 +636,40 @@ Model {
     ShowPageBoundaries	    off
     ZoomFactor		    "100"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    7
+    SIDHighWatermark	    10
     Block {
       BlockType		      Constant
       Name		      "Constant"
-      SID		      5
-      Position		      [105, 40, 135, 70]
-      Value		      "3.14"
+      SID		      10
+      Position		      [480, 70, 510, 100]
+      Value		      "[3.14;2;3;4;5;1]"
+      OutDataTypeMode	      "single"
       OutDataType	      "fixdt(1, 16)"
       OutScaling	      "2^0"
-      SampleTime	      "3"
+      OutDataTypeStr	      "single"
+      SampleTime	      "1"
+    }
+    Block {
+      BlockType		      Constant
+      Name		      "Constant1"
+      SID		      9
+      Position		      [105, 30, 135, 60]
+      Value		      "[4,4,5.35,4,4,4]'"
+      OutDataTypeMode	      "double"
+      OutDataType	      "fixdt(1,32)"
+      ConRadixGroup	      "Best Precision: Vector-wise"
+      OutDataTypeStr	      "double"
+      SampleTime	      "1"
     }
     Block {
       BlockType		      Scope
       Name		      "Scope"
       SID		      7
       Ports		      [1]
-      Position		      [255, 139, 285, 171]
+      Position		      [255, 149, 285, 181]
       Floating		      off
-      Location		      [663, 209, 987, 448]
-      Open		      off
+      Location		      [384, 173, 708, 412]
+      Open		      on
       NumInputPorts	      "1"
       List {
 	ListType		AxesTitles
@@ -667,11 +681,31 @@ Model {
       SampleTime	      "0"
     }
     Block {
+      BlockType		      Scope
+      Name		      "Scope1"
+      SID		      8
+      Ports		      [1]
+      Position		      [200, 94, 230, 126]
+      Floating		      off
+      Location		      [663, 209, 987, 448]
+      Open		      off
+      NumInputPorts	      "1"
+      List {
+	ListType		AxesTitles
+	axes1			"%<SignalLabel>"
+      }
+      YMin		      "0"
+      YMax		      "10"
+      SaveName		      "ScopeData1"
+      DataFormat	      "StructureWithTime"
+      SampleTime	      "0"
+    }
+    Block {
       BlockType		      Reference
       Name		      "UDP Receive"
       SID		      6
       Ports		      [0, 1]
-      Position		      [65, 136, 175, 184]
+      Position		      [65, 139, 175, 191]
       LibraryVersion	      "1.84"
       DialogController	      "instrumentcreatedialog"
       DialogControllerArgs    "DataTag0"
@@ -680,11 +714,11 @@ Model {
       Host		      "127.0.0.1"
       Port		      "2500"
       LocalPort		      "2500"
-      DataSize		      "1"
+      DataSize		      "[3  1]"
       EnableBlockingMode      on
       Timeout		      "15"
-      SampleTime	      "0.01"
-      DataType		      "int16"
+      SampleTime	      "1"
+      DataType		      "double"
       ByteOrder		      "LittleEndian"
     }
     Block {
@@ -692,7 +726,7 @@ Model {
       Name		      "UDP Send"
       SID		      3
       Ports		      [1]
-      Position		      [185, 32, 295, 78]
+      Position		      [190, 22, 300, 68]
       LibraryVersion	      "1.84"
       DialogController	      "instrumentcreatedialog"
       DialogControllerArgs    "DataTag1"
@@ -700,20 +734,27 @@ Model {
       SourceType	      "UDP Send"
       Host		      "127.0.0.1"
       Port		      "2040"
-      LocalPort		      "2040"
+      LocalPort		      "2041"
       EnableBlockingMode      on
       ByteOrder		      "LittleEndian"
     }
     Line {
-      SrcBlock		      "Constant"
+      SrcBlock		      "Constant1"
       SrcPort		      1
-      DstBlock		      "UDP Send"
-      DstPort		      1
+      Points		      [25, 0]
+      Branch {
+	DstBlock		"UDP Send"
+	DstPort			1
+      }
+      Branch {
+	Points			[0, 65]
+	DstBlock		"Scope1"
+	DstPort			1
+      }
     }
     Line {
       SrcBlock		      "UDP Receive"
       SrcPort		      1
-      Points		      [0, -5]
       DstBlock		      "Scope"
       DstPort		      1
     }

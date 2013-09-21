@@ -29,7 +29,9 @@ Multirotor_Attitude_Control_H_Infi::Multirotor_Attitude_Control_H_Infi() {
 	_setpoint_state = State();
 	_setpoint_rate = State();
 	_setpoint_accel = State();
-	//_command_torque [3];
+	_integral(0)=0.0f;
+	_integral(1)=0.0f;
+	_integral(2)=0.0f;
 	_modes_set = false;
 	_state_track = false;
 	_rate_track = false;
@@ -118,9 +120,10 @@ void Multirotor_Attitude_Control_H_Infi::calc_gains(const Matrix& M,const Matrix
 	const float w_2 = _weight_error_state;
 	const float w_3 = _weight_error_integral;
 	const float w_u = _weight_torque;
-
+	
+	float I_data[] = { 1,0,0, 0,1,0, 0,0,1 };
 	Matrix I;
-	I(0,0)=1.0f;I(1,1)=1.0f;I(2,2)=1.0f;
+	I.set(I_data,I_data+9);
 	Matrix M_inv;
 	M.inverse(M_inv);
 	Matrix Dynamics_weights = M_inv*( C+I*( 1.0f/(w_u*w_u) ) );
@@ -130,11 +133,14 @@ void Multirotor_Attitude_Control_H_Infi::calc_gains(const Matrix& M,const Matrix
 	k_p=I*(w_3/w_1)+Dynamics_weights*long_expr;
 	k_i=Dynamics_weights*(w_3/w_1);
 	#ifdef DEBUG
-	std::cout<< "long_expr" << long_expr << std::endl;
-	std::cout<< "Dynamics_weights " <<Dynamics_weights << std::endl;
-	std::cout<< "k_d "<< k_d << std::endl;
-	std::cout<< "k_p "<< k_p << std::endl;
-	std::cout<< "k_i "<< k_i << std::endl;
+	std::cout<< "Calculated Gains:---------"<< std::endl;
+	std::cout<< "I\n" << I << std::endl;
+	std::cout<< "M_Inverse\n" << M_inv << std::endl;
+	std::cout<< "long_expr\n " << long_expr << std::endl;
+	std::cout<< "Dynamics_weights\n" <<Dynamics_weights << std::endl;
+	std::cout<< "k_d\n"<< k_d << std::endl;
+	std::cout<< "k_p\n"<< k_p << std::endl;
+	std::cout<< "k_i\n"<< k_i << std::endl;
 	#endif
 }
 
