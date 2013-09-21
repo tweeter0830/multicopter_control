@@ -6,10 +6,10 @@ ifeq ($(UNAME), Windows)
 endif
 ifeq ($(UNAME), Linux)
 	LIBS = -lboost_system -lpthread
-	INC= -I/home/jacob/Packages/vmmlib-1.0/include/
+	INC= -I/home/tweeter/Packages/vmmlib-1.0/include/
 endif
 
-CXX = g++ -Wall -std=gnu++11
+CXX = g++ -Wall -std=c++0x #-std=gnu++11
 CC =
 
 EXECUTABLE = udp_sim_link

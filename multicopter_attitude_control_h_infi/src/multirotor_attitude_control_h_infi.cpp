@@ -155,9 +155,9 @@ void Multirotor_Attitude_Control_H_Infi::make_M(const State& St, Matrix& M) {
 	M_vals[1]=0;
 	M_vals[2]=-_Ixx*sin_P;
 	// Second Row
-	M_vals[3]=_Iyy*cos_R*cos_R+_Izz*sin_R*sin_R;
-	M_vals[4]=(_Iyy-_Izz)*cos_R*sin_R*sin_P;
-	M_vals[5]=0;
+	M_vals[3]=0;
+	M_vals[4]=_Iyy*cos_R*cos_R + _Izz*sin_R*sin_R;
+	M_vals[5]=(_Iyy-_Izz)*cos_R*sin_R*cos_P;
 	// Third row
 	M_vals[6]=-_Ixx*sin_P;
 	M_vals[7]=(_Iyy-_Izz)*cos_R*sin_R*cos_P;

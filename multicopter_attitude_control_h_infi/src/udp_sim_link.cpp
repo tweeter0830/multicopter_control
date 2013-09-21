@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
 	float weight_deriv = 0.001f;
 	float weight_state = 0.001f;
 	float weight_int = 0.001f;
-	float weight_torque = 1.0f;
+	float weight_torque = 1.0e5f;
 	
 	std::string str_internal_ip = "127.0.0.1";
 	try

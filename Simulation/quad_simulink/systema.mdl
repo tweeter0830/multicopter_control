@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.1222"
+    ComputedModelVersion    "1.1227"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -24,11 +24,11 @@ Model {
   Creator		  "L503823"
   UpdateHistory		  "UpdateHistoryNever"
   ModifiedByFormat	  "%<Auto>"
-  LastModifiedBy	  "jacob"
+  LastModifiedBy	  "tweeter"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Fri Sep 20 17:40:51 2013"
-  RTWModifiedTimeStamp	  301599160
-  ModelVersionFormat	  "1.%<AutoIncrement:1222>"
+  LastModifiedDate	  "Fri Sep 20 20:50:53 2013"
+  RTWModifiedTimeStamp	  301611051
+  ModelVersionFormat	  "1.%<AutoIncrement:1227>"
   ConfigurationManager	  "None"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -111,7 +111,7 @@ Model {
 	  $ObjectID		  2
 	  Version		  "1.6.0"
 	  StartTime		  "0.0"
-	  StopTime		  ".1"
+	  StopTime		  "1"
 	  AbsTol		  "auto"
 	  FixedStep		  "0.01"
 	  InitialStep		  "auto"
@@ -127,8 +127,8 @@ Model {
 	  MaxConsecutiveMinStep	  "1"
 	  RelTol		  "1e-3"
 	  SolverMode		  "Auto"
-	  Solver		  "ode4"
-	  SolverName		  "ode4"
+	  Solver		  "ode1"
+	  SolverName		  "ode1"
 	  ShapePreserveControl	  "DisableAll"
 	  ZeroCrossControl	  "UseLocalSettings"
 	  ZeroCrossAlgorithm	  "Nonadaptive"
@@ -518,7 +518,7 @@ Model {
       Name		      "Configuration"
       ExtraOptions	      "-aExtMode=0 -aExtModeTesting=0 "
       CurrentDlgPage	      "Solver"
-      ConfigPrmDlgPosition    " [ 507, 253, 1419, 955 ] "
+      ConfigPrmDlgPosition    " [ 338, 94, 1247, 781 ] "
     }
     PropName		    "ConfigurationSets"
   }
@@ -758,7 +758,7 @@ Model {
   }
   System {
     Name		    "systema"
-    Location		    [733, 281, 1753, 904]
+    Location		    [363, 132, 1383, 755]
     Open		    on
     ModelBrowserVisibility  off
     ModelBrowserWidth	    200
@@ -1692,7 +1692,7 @@ Model {
 	  MaskHideContents	  off
 	  System {
 	    Name		    "W. NORMAL NOISE"
-	    Location		    [1016, 88, 1843, 514]
+	    Location		    [772, 88, 1599, 514]
 	    Open		    off
 	    ModelBrowserVisibility  off
 	    ModelBrowserWidth	    200
@@ -2244,7 +2244,7 @@ Model {
       MaskHideContents	      off
       System {
 	Name			"DYNAMICS"
-	Location		[1, 152, 126, 189]
+	Location		[527, 593, 652, 630]
 	Open			off
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
@@ -2422,7 +2422,7 @@ Model {
       MaskHideContents	      off
       System {
 	Name			"FILTERED DATA SCOPES\nAttitude [rad]\nAng. rates [rad/sec]\nposition [m]\nPos. rates [m/s]1"
-	Location		[26, 259, 1042, 921]
+	Location		[26, 237, 1042, 899]
 	Open			off
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
@@ -3214,8 +3214,8 @@ Model {
       MaskHideContents	      off
       System {
 	Name			"MOTORS+MODULES"
-	Location		[1, 88, 1023, 736]
-	Open			off
+	Location		[0, 60, 1022, 708]
+	Open			on
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
 	ScreenColor		"white"
