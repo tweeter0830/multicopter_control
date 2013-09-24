@@ -8,6 +8,60 @@
 
 using boost::asio::ip::udp;
 
+class datagram_handler
+{
+public:
+	datagram_handler(boost::asio::io_service& ios, boost::asio::ip::address ip, int recv_port, int timeout )
+		: _io_service(ios),
+		  _timer(ios)
+		{
+			_endp = udp::endpoint(ip, recv_port);
+			_socket = udp::socket(_endp);
+			_timeout = timeout;
+			_socket.async_receive_from(
+				boost::asio::buffer(_data, max_length), _endp,
+				boost::bind(&datagram_handler::handle_receive_from, this,
+					    boost::asio::placeholders::error,
+					    boost::asio::placeholders::bytes_transferred));
+
+			_timer.expires_from_now(boost::posix_time::seconds(timeout));
+			_timer.async_wait(boost::bind(&datagram_handler::close, this));
+		}
+
+	void handle_receive_from(const boost::system::error_code& err,
+				 std::size_t bytes_transferred )
+		{
+			if (err)
+			{
+				std::cout << "Receive error: " << err.message() << "\n";
+				this.close();
+			}
+			else
+			{
+				_timer.expires_from_now(boost::posix_time::seconds(_timeout));
+				std::cout << "Successful receive\n";
+				printf( "%i Bytes\n" , bytes_transferred );
+			}
+		}
+
+	void close()
+		{
+			_socket.close();
+			_is_running = false;
+		}
+
+private:
+	boost::asio::io_service& _io_service;
+	boost::asio::deadline_timer _timer;
+	udp::socket _socket;
+	udp::endpoint _endp;
+	enum { max_length = 40 };
+	double _data[max_length];
+	size_t _bytes_recv;
+	int _timeout;
+	bool _is_running;
+};
+
 int main(int argc, char* argv[])
 {
 	// TODO: Parse inputs
@@ -17,10 +71,10 @@ int main(int argc, char* argv[])
 	float Izz = 1.121e-2f;
 	float moment_arm = 0.232f;
 	// Control Params:
-	float weight_deriv = 1.0e-5f;
-	float weight_state = 5.0e-3f;
-	float weight_int = 1.0e-5f;
-	float weight_torque = 1.0e2f;
+	float weight_deriv = 0.1f;
+	float weight_state = 3.0f;
+	float weight_int =   9.0f;
+	float weight_torque = 1.5f;
 	//Simulation Params
 	std::string str_internal_ip = "127.0.0.1";
 	double time = 0;
@@ -62,10 +116,10 @@ int main(int argc, char* argv[])
 				boost::asio::buffer(recv_buf), endpoint_recv_from);
 			printf( "RECV: '%lu' %e %e %e %e %e %e\n", len, recv_buf[0],recv_buf[1],recv_buf[2],recv_buf[3],recv_buf[4],recv_buf[5] );
 			meas_state.r = recv_buf[0];
-			meas_state.p = recv_buf[1];
+			meas_state.p = -recv_buf[1];
 			meas_state.y = recv_buf[2];
 			meas_rate.r = recv_buf[3];
-			meas_rate.p = recv_buf[4];
+			meas_rate.p = -recv_buf[4];
 			meas_rate.y = recv_buf[5];
 			time = recv_buf[6];
 			// Update the control command
@@ -73,7 +127,7 @@ int main(int argc, char* argv[])
 			// Send control to the simulation
 			send_buf[0]=torque_out.r/moment_arm;
 			send_buf[1]=torque_out.p/moment_arm;
-			send_buf[2]=torque_out.y;
+			send_buf[2]=-torque_out.y;
 			printf( "SENT: %e %e %e\n", send_buf[0], send_buf[1], send_buf[2] );
 			socket_send.send_to(boost::asio::buffer(send_buf), endpoint_send_to);
 			}

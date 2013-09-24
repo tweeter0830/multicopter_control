@@ -18,7 +18,7 @@ typedef vmml::vector<3,float> Vector;
 
 Multirotor_Attitude_Control_H_Infi::Multirotor_Attitude_Control_H_Infi() {
 	_last_run = 0;
-	_tc = 0.1f;
+	_tc = 0.01f;
 	_weight_error_deriv = 1;
 	_weight_error_state = 1;
 	_weight_error_integral = 1;

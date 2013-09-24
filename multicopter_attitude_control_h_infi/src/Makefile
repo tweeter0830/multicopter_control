@@ -1,4 +1,4 @@
-UNAME = Linux
+UNAME = Windows
 
 ifeq ($(UNAME), Windows)
 	LIBS = -lboost_system-mt
@@ -9,7 +9,7 @@ ifeq ($(UNAME), Linux)
 	INC= -I/home/jacob/Packages/vmmlib-1.0/include/
 endif
 
-CXX = g++ -Wall -std=c++0x #-std=gnu++11
+CXX = g++ -Wall -std=gnu++11 #-std=gnu++11 -std=c++0x
 CC =
 
 EXECUTABLE = udp_sim_link
