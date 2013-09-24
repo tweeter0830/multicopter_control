@@ -17,9 +17,9 @@ int main(int argc, char* argv[])
 	float Izz = 1.121e-2f;
 	float moment_arm = 0.232f;
 	// Control Params:
-	float weight_deriv = 0.1f;
-	float weight_state = 0.1f;
-	float weight_int = 0.1f;
+	float weight_deriv = 1.0e-5f;
+	float weight_state = 5.0e-3f;
+	float weight_int = 1.0e-5f;
 	float weight_torque = 1.0e2f;
 	//Simulation Params
 	std::string str_internal_ip = "127.0.0.1";

@@ -97,7 +97,7 @@ bool Multirotor_Attitude_Control_H_Infi::control(const State& meas_state, const 
 	#endif
 	_integral = _integral + error_state*dt;
 	// TODO: check integral limits and saturation
-	Vector control_accel = k_d*error_rate + k_p*error_state + k_i*_integral;
+	Vector control_accel = k_d*error_rate + k_p*error_state - k_i*_integral;
 	Vector control_torque = _M*setpoint_accel + _Cor*meas_rate_vect - _M*control_accel;
 	#ifdef DEBUG
 	std::cout << "Time Diff: " << dt << std::endl;
@@ -176,37 +176,37 @@ void Multirotor_Attitude_Control_H_Infi::make_M(const State& St, Matrix& M) {
 
 void Multirotor_Attitude_Control_H_Infi::make_C(const State& St, const State& Rate, Matrix& C) {
 	float C_vals [9] = {0};
-	float sin_R=std::sin(St.r);
-	float cos_R=std::cos(St.r);
-	float sin_P=std::sin(St.p);
-	float cos_P=std::cos(St.p);
-	float long_factor = Rate.p*cos_R*sin_R + Rate.y*sin_R*sin_R*cos_P;
+	float s_ph=std::sin(St.r);
+	float c_ph=std::cos(St.r);
+	float s_th=std::sin(St.p);
+	float c_th=std::cos(St.p);
+	float long_factor = Rate.p*c_ph*s_ph + Rate.y*s_ph*s_ph*c_th;
 	//First Row
 	C_vals[0]=0;
 	C_vals[1]=(_Iyy-_Izz)*(long_factor) + 
-		     (_Izz-_Iyy)*Rate.y*cos_R*cos_R*cos_P -
-		     _Ixx*Rate.y*cos_P;
-	C_vals[2]=(_Izz-_Iyy)*Rate.p*cos_R*sin_R*cos_P*cos_P;
+		     (_Izz-_Iyy)*Rate.y*c_ph*c_ph*c_th -
+		     _Ixx*Rate.y*c_th;
+	C_vals[2]=(_Izz-_Iyy)*Rate.y*c_ph*s_ph*c_th*c_th;
 	//Second Row
 	C_vals[3]=(_Izz-_Iyy)*(long_factor) + 
-	             (_Iyy-_Izz)*Rate.y*cos_R*cos_R*cos_P +
-		     _Ixx*Rate.y*cos_P;
-	C_vals[4]=(_Izz-_Iyy)*Rate.r*cos_R*cos_R;
-	C_vals[5]=-_Ixx*Rate.y*sin_P*cos_P +
-		      _Iyy*Rate.y*sin_R*sin_R*cos_P*sin_P +
-		      _Izz*Rate.y*cos_R*cos_R*sin_P*cos_P;
+	             (_Iyy-_Izz)*Rate.y*c_ph*c_ph*c_th +
+		     _Ixx*Rate.y*c_th;
+	C_vals[4]=(_Izz-_Iyy)*Rate.r*c_ph*c_ph;
+	C_vals[5]=-_Ixx*Rate.y*s_th*c_th +
+		      _Iyy*Rate.y*s_ph*s_ph*c_th*s_th +
+		      _Izz*Rate.y*c_ph*c_ph*s_th*c_th;
 	//Third Row
-	C_vals[6]=(_Iyy-_Izz)*Rate.y*cos_P*cos_P*sin_R*cos_R - 
-		     _Ixx*Rate.p*cos_P;
-	C_vals[7]=(_Izz-_Iyy)*(Rate.p*cos_R*sin_R*sin_P+Rate.r*sin_R*sin_R*cos_P) +
-		     (_Iyy-_Izz)*Rate.r*cos_R*cos_R*cos_P + 
-		     _Ixx*Rate.y*sin_P*cos_P - 
-		     _Iyy*Rate.y*sin_R*sin_R*sin_P*cos_P - 
-		     _Izz*Rate.y*cos_R*cos_R*sin_P*cos_P;
-	C_vals[8]=(_Iyy-_Izz)*Rate.r*cos_R*sin_R*cos_P*cos_P - 
-		     _Iyy*Rate.p*sin_R*sin_R*cos_P*sin_P - 
-		     _Izz*Rate.p*cos_R*cos_R*cos_P*sin_P + 
-		     _Ixx*Rate.p*cos_P*sin_P;
+	C_vals[6]=(_Iyy-_Izz)*Rate.y*c_th*c_th*s_ph*c_ph - 
+		     _Ixx*Rate.p*c_th;
+	C_vals[7]=(_Izz-_Iyy)*(Rate.p*c_ph*s_ph*s_th+Rate.r*s_ph*s_ph*c_th) +
+		     (_Iyy-_Izz)*Rate.r*c_ph*c_ph*c_th + 
+		     _Ixx*Rate.y*s_th*c_th - 
+		     _Iyy*Rate.y*s_ph*s_ph*s_th*c_th - 
+		     _Izz*Rate.y*c_ph*c_ph*s_th*c_th;
+	C_vals[8]=(_Iyy-_Izz)*Rate.r*c_ph*s_ph*c_th*c_th - 
+		     _Iyy*Rate.p*s_ph*s_ph*c_th*s_th - 
+		     _Izz*Rate.p*c_ph*c_ph*c_th*s_th + 
+		     _Ixx*Rate.p*c_th*s_th;
 	C.set( C_vals, C_vals + 9 );
 	#ifdef DEBUG
 	std::cout<< "C " << C << std::endl;
