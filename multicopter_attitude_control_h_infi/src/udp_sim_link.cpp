@@ -1,71 +1,58 @@
-#include <boost/bind.hpp>
-#include <boost/date_time/posix_time/posix_time_types.hpp>
-#include <chrono> 
+#include <chrono>
 #include <thread>
 #include <iostream>
 #include <string>
-#include <cstring>
 #include <boost/array.hpp>
 #include <boost/asio.hpp>
 #include "multirotor_attitude_control_h_infi.hpp"
 
 using boost::asio::ip::udp;
-using namespace boost::asio;
 
-class Datagram_Handler
+class datagram_handler
 {
 public:
-	Datagram_Handler(boost::asio::io_service& ios, udp::endpoint endp, int timeout ) 
-		: _io_service(ios), _socket(ios), _timer(ios){
-		//_timer = boost::asio::deadline_timer(ios);
-		_endp = endp;
-		_timeout = timeout;
-		_socket.open(udp::v4());
-		_socket.bind(_endp);
-		_is_running = false;
-	}
-	void start_listening(){
-		//_socket.open(udp::v4());
-		//_socket.bind(_endp);
-		_socket.async_receive_from(
-			boost::asio::buffer(_data, max_length), _endp,
-			boost::bind(&Datagram_Handler::handle_receive_from, this,
-				    boost::asio::placeholders::error,
-				    boost::asio::placeholders::bytes_transferred));
+	datagram_handler(boost::asio::io_service& ios, boost::asio::ip::address ip, int recv_port, int timeout )
+		: _io_service(ios),
+		  _timer(ios)
+		{
+			_endp = udp::endpoint(ip, recv_port);
+			_socket = udp::socket(_endp);
+			_timeout = timeout;
+			_socket.async_receive_from(
+				boost::asio::buffer(_data, max_length), _endp,
+				boost::bind(&datagram_handler::handle_receive_from, this,
+					    boost::asio::placeholders::error,
+					    boost::asio::placeholders::bytes_transferred));
 
-		_timer.expires_from_now(boost::posix_time::seconds(_timeout));
-		_timer.async_wait(boost::bind(&Datagram_Handler::close, this));
-		_is_running = true;
+			_timer.expires_from_now(boost::posix_time::seconds(timeout));
+			_timer.async_wait(boost::bind(&datagram_handler::close, this));
+		}
 
-	}
 	void handle_receive_from(const boost::system::error_code& err,
-				 std::size_t bytes_transferred ){
-		if (err)
+				 std::size_t bytes_transferred )
 		{
-			std::cout << "Receive error: " << err.message() << "\n";
-			this->close();
+			if (err)
+			{
+				std::cout << "Receive error: " << err.message() << "\n";
+				this.close();
+			}
+			else
+			{
+				_timer.expires_from_now(boost::posix_time::seconds(_timeout));
+				std::cout << "Successful receive\n";
+				printf( "%i Bytes\n" , bytes_transferred );
+			}
 		}
-		else
+
+	void close()
 		{
-			this->start_listening();
-			std::cout << "Successful receive\n";
-			printf( "%i Bytes\n" , bytes_transferred );
+			_socket.close();
+			_is_running = false;
 		}
-	}
-	void close(){
-		_is_running = false;
-		_socket.cancel();
-       	}
-	bool is_running() {
-		return _is_running;
-	}
-	void copy_data(double in_data[], int len){
-	      memcpy(_data, in_data, len);
-	}
 
 private:
-        io_service& _io_service;
-        deadline_timer _timer;
+	boost::asio::io_service& _io_service;
+	boost::asio::deadline_timer _timer;
 	udp::socket _socket;
 	udp::endpoint _endp;
 	enum { max_length = 40 };
@@ -101,14 +88,17 @@ int main(int argc, char* argv[])
 		std::cout<< "Started" << std::endl;
 		// Set up UDP communication
 		boost::asio::ip::address internal_ip = boost::asio::ip::address::from_string(str_internal_ip);
-		boost::asio::io_service ios;
+		boost::asio::io_service io_service;
 		
 		udp::endpoint endpoint_recv_from(internal_ip,2040);
 		udp::endpoint endpoint_send_to(internal_ip,2500);
 	       
-		udp::socket socket_send(ios);
+		udp::socket socket_recv(io_service);
+		udp::socket socket_send(io_service);
+		socket_recv.open(udp::v4());
 		socket_send.open(udp::v4());
-		
+		socket_recv.bind(endpoint_recv_from);
+		//socket_send.bind(endpoint_send_to);
 		// Initialize our controller
 		Multirotor_Attitude_Control_H_Infi quad_control;
 		quad_control.set_phys_params(Ixx, Iyy, Izz);
@@ -116,51 +106,31 @@ int main(int argc, char* argv[])
 		quad_control.set_mode(true, true, true);
 		// Set up a bunch of parameters for measurement reading and control sending
 		Multirotor_Attitude_Control_H_Infi::State meas_state, meas_rate, torque_out;
-
-		double recv_buf[40] = {0};
+		boost::array<double, 40> recv_buf;
 		boost::array<double, 3> send_buf;
-
 		bool sim_running = true;
-		Datagram_Handler recv_handler(ios,endpoint_recv_from,5);
-		recv_handler.start_listening();
 		std::cout<<"Control ready for input"<<std::endl;
-		while ( sim_running ) {
+		while (sim_running) {
 			// Get state information for roll, pitch and yaw and their derivs
-			ios.run();
-			if( recv_handler.is_running() ){
-				recv_handler.copy_data(recv_buf,7);
-				printf( "RECV: '%lu' %e %e %e %e %e %e\n", 
-					3, 
-					recv_buf[0],
-					recv_buf[1],
-					recv_buf[2],
-					recv_buf[3],
-					recv_buf[4],
-					recv_buf[5] );
-				meas_state.r = recv_buf[0];
-				meas_state.p = -recv_buf[1];
-				meas_state.y = recv_buf[2];
-				meas_rate.r = recv_buf[3];
-				meas_rate.p = -recv_buf[4];
-				meas_rate.y = recv_buf[5];
-				time = recv_buf[6];
-				// Update the control command
-				quad_control.control(meas_state, meas_rate, torque_out, time);
-				// Send control to the simulation
-				send_buf[0]=torque_out.r/moment_arm;
-				send_buf[1]=torque_out.p/moment_arm;
-				send_buf[2]=-torque_out.y;
-				printf( "SENT: %e %e %e\n", send_buf[0], send_buf[1], send_buf[2] );
-				socket_send.send_to(boost::asio::buffer(send_buf), endpoint_send_to);
-			} else {
-				std::cout << "Timedout, Resetting Integral." << std::endl;
-				quad_control.reset_integrator();
-				//recv_handler.start_listening();
+			size_t len =socket_recv.receive_from(
+				boost::asio::buffer(recv_buf), endpoint_recv_from);
+			printf( "RECV: '%lu' %e %e %e %e %e %e\n", len, recv_buf[0],recv_buf[1],recv_buf[2],recv_buf[3],recv_buf[4],recv_buf[5] );
+			meas_state.r = recv_buf[0];
+			meas_state.p = -recv_buf[1];
+			meas_state.y = recv_buf[2];
+			meas_rate.r = recv_buf[3];
+			meas_rate.p = -recv_buf[4];
+			meas_rate.y = recv_buf[5];
+			time = recv_buf[6];
+			// Update the control command
+			quad_control.control(meas_state, meas_rate, torque_out, time);
+			// Send control to the simulation
+			send_buf[0]=torque_out.r/moment_arm;
+			send_buf[1]=torque_out.p/moment_arm;
+			send_buf[2]=-torque_out.y;
+			printf( "SENT: %e %e %e\n", send_buf[0], send_buf[1], send_buf[2] );
+			socket_send.send_to(boost::asio::buffer(send_buf), endpoint_send_to);
 			}
-			//ios.run();
-			//recv_handler.start_listening();
-			//ios.run();
-		}
 	}
 	catch (std::exception& e)
 	{

@@ -1,4 +1,4 @@
-UNAME = Linux
+UNAME = Windows
 
 ifeq ($(UNAME), Windows)
 	LIBS = -lboost_system-mt
