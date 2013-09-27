@@ -89,7 +89,7 @@ Cy=1.32;    % estimation taken from literature [less]
 Cz=1.32;    % estimation taken from literature [less]
 
 % ***** OS4 volume *****
-Vol=3.04E-4;%-4; 	% [m3]
+Vol=3.04E-4; 	% [m3]
 PArchim = rho*g*Vol;  % [N]
 
 

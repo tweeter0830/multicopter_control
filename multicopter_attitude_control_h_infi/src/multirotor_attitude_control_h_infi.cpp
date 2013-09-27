@@ -95,9 +95,9 @@ bool Multirotor_Attitude_Control_H_Infi::control(const State& meas_state, const 
 	std::cout << "error_rate " << error_rate << std::endl;
 	std::cout << "setpoint_accel " << setpoint_accel << std::endl;
 	#endif
-	_integral = _integral + error_state*dt;
+	//_integral = _integral + error_state*dt;
 	// TODO: check integral limits and saturation
-	Vector control_accel = k_d*error_rate + k_p*error_state - k_i*_integral;
+	Vector control_accel = k_p*error_state; //k_d*error_rate + k_p*error_state - k_i*_integral;
 	Vector control_torque = _M*setpoint_accel + _Cor*meas_rate_vect - _M*control_accel;
 	#ifdef DEBUG
 	std::cout << "Time Diff: " << dt << std::endl;

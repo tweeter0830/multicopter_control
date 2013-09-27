@@ -17,10 +17,10 @@ int main(int argc, char* argv[])
 	float Izz = 1.121e-2f;
 	float moment_arm = 0.232f;
 	// Control Params:
-	float weight_deriv = 1.0e-5f;
-	float weight_state = 5.0e-3f;
-	float weight_int = 1.0e-5f;
-	float weight_torque = 1.0e2f;
+	float weight_deriv = 0.1f;
+	float weight_state = 3.0f;
+	float weight_int = 9.0f;
+	float weight_torque = 1.5f;
 	//Simulation Params
 	std::string str_internal_ip = "127.0.0.1";
 	double time = 0;
@@ -60,7 +60,8 @@ int main(int argc, char* argv[])
 			// Get state information for roll, pitch and yaw and their derivs
 			size_t len =socket_recv.receive_from(
 				boost::asio::buffer(recv_buf), endpoint_recv_from);
-			printf( "RECV: '%lu' %e %e %e %e %e %e\n", len, recv_buf[0],recv_buf[1],recv_buf[2],recv_buf[3],recv_buf[4],recv_buf[5] );
+			std::cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << std::endl;
+			printf( "RECV: %e '%lu' %e %e %e %e %e %e\n", recv_buf[6], len, recv_buf[0],recv_buf[1],recv_buf[2],recv_buf[3],recv_buf[4],recv_buf[5] );
 			meas_state.r = recv_buf[0];
 			meas_state.p = recv_buf[1];
 			meas_state.y = recv_buf[2];
