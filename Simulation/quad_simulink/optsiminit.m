@@ -28,6 +28,7 @@ global x2_1;    % old integrator value
 global x3_1;    % old integrator value
 
 global Om_old; % old residual speed
+global t_old; % old timestep
 
 global fIdx; % index for filtering
 
@@ -86,6 +87,7 @@ x2_1=0;
 x3_1=0;
 
 Om_old=0;
+t_old = 0;
 
 fIdx=0; % index for filtering
 

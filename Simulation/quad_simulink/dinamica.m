@@ -54,6 +54,9 @@ RRY=in(33:36);   % The rolling moments in Y [N]
 Omega=in(37:40);    % [rad/s]
 Om=+Omega(1)-Omega(2)+Omega(3)-Omega(4); % Om residual propellers rot. speed [rad/s]
 
+%Motor Accel
+Odot = in(41:44);
+
 % *************** Rotations (in body fixed frame) *************** 
 % Roll moments
 RgB = dotpitch*dotyaw*(Iyy-Izz);                % Body gyro effect [Nm]
@@ -73,10 +76,13 @@ PfM = 0.5*Cz*A*rho*dotpitch*abs(dotpitch)*L*(P/2)*L; % Pitch friction moment VOI
 
 % Yaw moments
 YgB = dotpitch*dotroll*(Ixx-Iyy); % [Nm]
-YiA = jr*(Om-abs(Om_old))/sp;            % Inertial acceleration/deceleration produces oposit yawing moment % [Nm]
+YiA = jr*(+Odot(1)-Odot(2)+Odot(3)-Odot(4));            % Inertial acceleration/deceleration produces oposit yawing moment % [Nm]
 YawA = +Q(1)-Q(2)+Q(3)-Q(4);               % counter torques difference produces yawing % [Nm]
 YhFx = (-HX(2)+HX(4))*L;                    % Hub force unbalance produces a yawing moment % [Nm]
 YhFy = (-HY(1)+HY(3))*L; % [Nm]
+
+
+motorCdot = (Om-abs(Om_old));
 
 Om_old=Om; % [rad/s]
 
@@ -119,9 +125,9 @@ out(11)=doty;  % y rate [m/s]
 out(12)=(YaA - YdF - YhF)/m;  % y accel [m/s^2]
 
 % ***** additional outputs for dynamics analysis ********
-out(13)=ZaA;    % replace by any term you want to analyse
-out(14)=ZaR;
-out(15)=ZaF;
-out(16)=YhFx;
-out(17)=YhFy;
-out(18)=YhFy;
+out(13)=YiA;    % replace by any term you want to analyse
+out(14)=YawA;
+out(15)=motorCdot;
+out(16)=motorCdot/sp;
+out(17)=XhF;
+out(18)=XhF;
