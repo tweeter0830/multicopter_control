@@ -33,10 +33,11 @@ Multirotor_Attitude_Control_H_Infi::Multirotor_Attitude_Control_H_Infi() {
 	_integral(0)=0.0f;
 	_integral(1)=0.0f;
 	_integral(2)=0.0f;
+	_int_sat = 10.0f;
 	_modes_set = false;
-	_state_track = false;
-	_rate_track = false;
-	_accel_track= false;
+	_state_track = true;
+	_rate_track = true;
+	_accel_track= true;
 }
 
 void Multirotor_Attitude_Control_H_Infi::set_mode(bool state_track, bool rate_track, bool accel_track){
@@ -56,9 +57,9 @@ bool Multirotor_Attitude_Control_H_Infi::control(const State& meas_state, const 
 	}
 	// TODO: check inputs here
 	float dt = time-_old_time;
-	Vector k_p;
-	Vector k_i;
-	Vector k_d;
+	Matrix k_p;
+	Matrix k_i;
+	Matrix k_d;
 	make_M(meas_state,_M);
 	make_C(meas_state, meas_rate, _Cor);
 	calc_gains(_M,_Cor, k_p, k_i, k_d);
@@ -95,9 +96,15 @@ bool Multirotor_Attitude_Control_H_Infi::control(const State& meas_state, const 
 	std::cout << "error_rate " << error_rate << std::endl;
 	std::cout << "setpoint_accel " << setpoint_accel << std::endl;
 	#endif
-	//_integral = _integral + error_state*dt;
-	// TODO: check integral limits and saturation
-	Vector control_accel = k_p*error_state; //k_d*error_rate + k_p*error_state - k_i*_integral;
+	_integral = _integral + error_state*dt;
+	for( int i = 0; i < 3; i++ ){
+		if( _integral(i) > _int_sat )
+			_integral(i) = _int_sat;
+		else if( _integral(i) < -_int_sat )
+			_integral(i) = -_int_sat;
+	}
+ 	// TODO: check integral limits and saturation
+	Vector control_accel = k_d*error_rate + k_p*error_state - k_i*_integral;
 	Vector control_torque = _M*setpoint_accel + _Cor*meas_rate_vect - _M*control_accel;
 	#ifdef DEBUG
 	std::cout << "Time Diff: " << dt << std::endl;
@@ -112,14 +119,7 @@ bool Multirotor_Attitude_Control_H_Infi::control(const State& meas_state, const 
 	return true;
 }
 
-void Multirotor_Attitude_Control_H_Infi::reset_integrator()
-{
-	_integral(0)=0.0f;
-	_integral(1)=0.0f;
-	_integral(2)=0.0f;
-}
-
-void Multirotor_Attitude_Control_H_Infi::calc_gains(const Matrix& M,const Matrix& C, Vector& k_p, Vector& k_i, Vector& k_d) {
+void Multirotor_Attitude_Control_H_Infi::calc_gains(const Matrix& M,const Matrix& C, Matrix& k_p, Matrix& k_i, Matrix& k_d) {
 	const float w_1 = _weight_error_deriv;
 	const float w_2 = _weight_error_state;
 	const float w_3 = _weight_error_integral;
@@ -211,4 +211,11 @@ void Multirotor_Attitude_Control_H_Infi::make_C(const State& St, const State& Ra
 	#ifdef DEBUG
 	std::cout<< "C " << C << std::endl;
 	#endif
+}
+
+void Multirotor_Attitude_Control_H_Infi::reset_integrator()
+{
+	_integral(0)=0.0f;
+	_integral(1)=0.0f;
+	_integral(2)=0.0f;
 }

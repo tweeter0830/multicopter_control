@@ -17,8 +17,8 @@ int main(int argc, char* argv[])
 	float Izz = 1.121e-2f;
 	float moment_arm = 0.232f;
 	// Control Params:
-	float weight_deriv = 0.1f;
-	float weight_state = 3.0f;
+	float weight_deriv = 1.5f;
+	float weight_state = 5000.0f;
 	float weight_int = 9.0f;
 	float weight_torque = 1.5f;
 	//Simulation Params
@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
 		// Set up a bunch of parameters for measurement reading and control sending
 		Multirotor_Attitude_Control_H_Infi::State meas_state, meas_rate, torque_out;
 		boost::array<double, 40> recv_buf;
-		boost::array<double, 3> send_buf;
+		boost::array<double, 6> send_buf;
 		bool sim_running = true;
 		std::cout<<"Control ready for input"<<std::endl;
 		while (sim_running) {
@@ -61,23 +61,39 @@ int main(int argc, char* argv[])
 			size_t len =socket_recv.receive_from(
 				boost::asio::buffer(recv_buf), endpoint_recv_from);
 			std::cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << std::endl;
-			printf( "RECV: %e '%lu' %e %e %e %e %e %e\n", recv_buf[6], len, recv_buf[0],recv_buf[1],recv_buf[2],recv_buf[3],recv_buf[4],recv_buf[5] );
-			meas_state.r = recv_buf[0];
-			meas_state.p = recv_buf[1];
-			meas_state.y = recv_buf[2];
-			meas_rate.r = recv_buf[3];
-			meas_rate.p = recv_buf[4];
-			meas_rate.y = recv_buf[5];
-			time = recv_buf[6];
-			// Update the control command
-			quad_control.control(meas_state, meas_rate, torque_out, time);
-			// Send control to the simulation
-			send_buf[0]=torque_out.r/moment_arm;
-			send_buf[1]=torque_out.p/moment_arm;
-			send_buf[2]=torque_out.y;
-			printf( "SENT: %e %e %e\n", send_buf[0], send_buf[1], send_buf[2] );
-			socket_send.send_to(boost::asio::buffer(send_buf), endpoint_send_to);
+			printf( "RECV: %e '%lu' %e %e %e %e %e %e \n", recv_buf[6], 
+				len, recv_buf[0],recv_buf[1],recv_buf[2],recv_buf[3],recv_buf[4],recv_buf[5] );
+			if( len == 7*8 ){
+				std::cout<< "Running Control Algo Step" << std::endl;
+				meas_state.r = recv_buf[0];
+				meas_state.p = recv_buf[1];
+				meas_state.y = recv_buf[2];
+				meas_rate.r = recv_buf[3];
+				meas_rate.p = recv_buf[4];
+				meas_rate.y = recv_buf[5];
+				time = recv_buf[6];
+				// Update the control command
+				quad_control.control(meas_state, meas_rate, torque_out, time);
+				// Send control to the simulation
+				send_buf[0]=torque_out.r/moment_arm;
+				send_buf[1]=torque_out.p/moment_arm;
+				send_buf[2]=torque_out.y;
+				send_buf[3]=quad_control.get_integral(0);
+				send_buf[4]=quad_control.get_integral(1);
+				send_buf[5]=quad_control.get_integral(2);
+				printf( "SENT: %e %e %e\n", send_buf[0], send_buf[1], send_buf[2] );
+				socket_send.send_to(boost::asio::buffer(send_buf), endpoint_send_to);
 			}
+			else if( len  == 4*8 ){
+				std::cout << "Resetting Algo with new parameters" << std::endl;
+				weight_state = recv_buf[0];
+				weight_deriv = recv_buf[1];
+				weight_int = recv_buf[2];
+				weight_torque = recv_buf[3];
+				quad_control.set_weights(weight_state,weight_int,weight_deriv,weight_torque);
+				quad_control.reset_integrator();
+			}
+		}
 	}
 	catch (std::exception& e)
 	{

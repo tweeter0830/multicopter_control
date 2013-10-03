@@ -19,8 +19,8 @@
 % POSSIBILITY OF SUCH DAMAGES.
 % SIMINIT Initialization of global variables
 
-clear all;
-clc;
+%clearvars -except W_u W_p W_i W_d w_u w_p w_i w_d Perf hudps indx;
+%clc;
 
 
 global x1_1;    % old integrator value

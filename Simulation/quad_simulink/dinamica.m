@@ -28,6 +28,8 @@ glob;
 
 global Om_old;
 
+debugU = 0;
+
 % ********* Operational Conditions *********
 roll=in(1);     % [rad]
 dotroll=in(2);  % [rad/s]
@@ -57,30 +59,63 @@ Om=+Omega(1)-Omega(2)+Omega(3)-Omega(4); % Om residual propellers rot. speed [ra
 %Motor Accel
 Odot = in(41:44);
 
-% *************** Rotations (in body fixed frame) *************** 
-% Roll moments
-RgB = dotpitch*dotyaw*(Iyy-Izz);                % Body gyro effect [Nm]
-RgP = jr*dotpitch*Om;                           % Propeller gyro effect [Nm] 
-RaA = L*(-T(2)+T(4));                           % Roll actuator action [Nm]
-RhF = (HY(1)+HY(2)+HY(3)+HY(4))*h;              % Hub force in y axis causes positive roll [Nm]
-RrM = +RRX(1)-RRX(2)+RRX(3)-RRX(4);             % Rolling moment due to forward flight in X [Nm]
-RfM = 0.5*Cz*A*rho*dotroll*abs(dotroll)*L*(P/2)*L;   % Roll friction moment VOIR L'IMPORTANCE [Nm]
+%Debug Motor forcing
+%U = in (45:48);
 
-% Pitch moments
-PgB = dotroll*dotyaw*(Izz-Ixx); % [Nm]
-PgP = jr*dotroll*Om; % [Nm]
-PaA = L*(-T(1)+T(3)); % [Nm]
-PhF = (HX(1)+HX(2)+HX(3)+HX(4))*h; % [Nm]
-PrM = +RRY(1)-RRY(2)+RRY(3)-RRY(4);             % Pitching moment due to sideward flight % [Nm]
-PfM = 0.5*Cz*A*rho*dotpitch*abs(dotpitch)*L*(P/2)*L; % Pitch friction moment VOIR L'IMPORTANCE % [Nm]
+if( debugU )
+    % *************** Rotations (in body fixed frame) *************** 
+    % Roll moments
+    RgB = dotpitch*dotyaw*(Iyy-Izz);                % Body gyro effect [Nm]
+    RgP = 0;%jr*dotpitch*Om;                           % Propeller gyro effect [Nm] 
+    RaA = L*U(2);                           % Roll actuator action [Nm]
+    RhF = 0; %(HY(1)+HY(2)+HY(3)+HY(4))*h;              % Hub force in y axis causes positive roll [Nm]
+    RrM = +RRX(1)-RRX(2)+RRX(3)-RRX(4);             % Rolling moment due to forward flight in X [Nm]
+    RfM = 0.5*Cz*A*rho*dotroll*abs(dotroll)*L*(P/2)*L;   % Roll friction moment VOIR L'IMPORTANCE [Nm]
 
-% Yaw moments
-YgB = dotpitch*dotroll*(Ixx-Iyy); % [Nm]
-YiA = jr*(+Odot(1)-Odot(2)+Odot(3)-Odot(4));            % Inertial acceleration/deceleration produces oposit yawing moment % [Nm]
-YawA = +Q(1)-Q(2)+Q(3)-Q(4);               % counter torques difference produces yawing % [Nm]
-YhFx = (-HX(2)+HX(4))*L;                    % Hub force unbalance produces a yawing moment % [Nm]
-YhFy = (-HY(1)+HY(3))*L; % [Nm]
+    % Pitch moments
+    PgB = dotroll*dotyaw*(Izz-Ixx); % [Nm]
+    PgP = 0; %jr*dotroll*Om; % [Nm]
+    PaA = L*U(3); % [Nm]
+    PhF = 0; %(HX(1)+HX(2)+HX(3)+HX(4))*h; % [Nm]
+    PrM = +RRY(1)-RRY(2)+RRY(3)-RRY(4);             % Pitching moment due to sideward flight % [Nm]
+    PfM = 0.5*Cz*A*rho*dotpitch*abs(dotpitch)*L*(P/2)*L; % Pitch friction moment VOIR L'IMPORTANCE % [Nm]
 
+    % Yaw moments
+    YgB = dotpitch*dotroll*(Ixx-Iyy); % [Nm]
+    YiA = 0;%jr*(+Odot(1)-Odot(2)+Odot(3)-Odot(4));            % Inertial acceleration/deceleration produces oposit yawing moment % [Nm]
+    YawA = U(4); %+Q(1)-Q(2)+Q(3)-Q(4);               % counter torques difference produces yawing % [Nm]
+    YhFx = 0;%(-HX(2)+HX(4))*L;                    % Hub force unbalance produces a yawing moment % [Nm]
+    YhFy = 0;%(-HY(1)+HY(3))*L; % [Nm]
+    
+    %Cumulitive Thrust
+    CThrust = U(1);
+else
+    % *************** Rotations (in body fixed frame) *************** 
+    % Roll moments
+    RgB = dotpitch*dotyaw*(Iyy-Izz);                % Body gyro effect [Nm]
+    RgP = jr*dotpitch*Om;                           % Propeller gyro effect [Nm] 
+    RaA = L*(-T(2)+T(4));                           % Roll actuator action [Nm]
+    RhF = (HY(1)+HY(2)+HY(3)+HY(4))*h;              % Hub force in y axis causes positive roll [Nm]
+    RrM = +RRX(1)-RRX(2)+RRX(3)-RRX(4);             % Rolling moment due to forward flight in X [Nm]
+    RfM = 0.5*Cz*A*rho*dotroll*abs(dotroll)*L*(P/2)*L;   % Roll friction moment VOIR L'IMPORTANCE [Nm]
+
+    % Pitch moments
+    PgB = dotroll*dotyaw*(Izz-Ixx); % [Nm]
+    PgP = jr*dotroll*Om; % [Nm]
+    PaA = L*(-T(1)+T(3)); % [Nm]
+    PhF = (HX(1)+HX(2)+HX(3)+HX(4))*h; % [Nm]
+    PrM = +RRY(1)-RRY(2)+RRY(3)-RRY(4);             % Pitching moment due to sideward flight % [Nm]
+    PfM = 0.5*Cz*A*rho*dotpitch*abs(dotpitch)*L*(P/2)*L; % Pitch friction moment VOIR L'IMPORTANCE % [Nm]
+
+    % Yaw moments
+    YgB = dotpitch*dotroll*(Ixx-Iyy); % [Nm]
+    YiA = jr*(+Odot(1)-Odot(2)+Odot(3)-Odot(4));            % Inertial acceleration/deceleration produces oposit yawing moment % [Nm]
+    YawA = +Q(1)-Q(2)+Q(3)-Q(4);               % counter torques difference produces yawing % [Nm]
+    YhFx = (-HX(2)+HX(4))*L;                    % Hub force unbalance produces a yawing moment % [Nm]
+    YhFy = (-HY(1)+HY(3))*L; % [Nm]
+    
+    CThrust = T(1)+T(2)+T(3)+T(4);
+end
 
 motorCdot = (Om-abs(Om_old));
 
@@ -89,17 +124,17 @@ Om_old=Om; % [rad/s]
 % *************** Translations (in earth fixed frame) *************** 
 
 % Z forces
-ZaA = (cos(pitch)*cos(roll))*(T(1)+T(2)+T(3)+T(4));          % actuators action [N]
+ZaA = (cos(pitch)*cos(roll))*(CThrust);          % actuators action [N]
 ZaR = PArchim;      % Archimede force ;-) [N]
 ZaF = 0.5*Cz*A*rho*dotz*abs(dotz)*P + 0.5*Cz*Ac*rho*dotz*abs(dotz);  % friction force estimation (propellers friction+OS4 center friction) [N]
 
 % X forces
-XaA = (sin(yaw)*sin(roll)+cos(yaw)*sin(pitch)*cos(roll))*(T(1)+T(2)+T(3)+T(4)); % [N] 
+XaA = (sin(yaw)*sin(roll)+cos(yaw)*sin(pitch)*cos(roll))*(CThrust); % [N] 
 XdF = 0.5*Cx*Ac*rho*dotx*abs(dotx); % [N]
 XhF = HX(1)+HX(2)+HX(3)+HX(4); % [N]
 
 % Y forces
-YaA = (-cos(yaw)*sin(roll)+sin(yaw)*sin(pitch)*cos(roll))*(T(1)+T(2)+T(3)+T(4)); % [N]
+YaA = (-cos(yaw)*sin(roll)+sin(yaw)*sin(pitch)*cos(roll))*(CThrust); % [N]
 YdF = 0.5*Cy*Ac*rho*doty*abs(doty); % [N]
 YhF = HY(1)+HY(2)+HY(3)+HY(4); % [N]
 
