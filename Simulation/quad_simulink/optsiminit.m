@@ -22,6 +22,8 @@
 %clearvars -except W_u W_p W_i W_d w_u w_p w_i w_d Perf hudps indx;
 %clc;
 
+addpath(genpath(pwd));
+Simulation_Params;
 
 global x1_1;    % old integrator value
 global x2_1;    % old integrator value
